@@ -15,16 +15,24 @@
 - Quick `python tools/market_data.py --macro`. If VIX has spiked above danger or outlook flipped NEGATIVE since pre-market → **abort all entries**, notify, STOP.
 
 ### 3. For each Active candidate, run the entry gauntlet (in order)
-Re-score fresh (prices moved since pre-market): `python tools/strategy_scorer.py --ticker <SYM> --sector <Sector>`.
+Re-score fresh **with the live Alpaca price** (prices moved since pre-market — sizing must use the
+real execution price, not yesterday's close):
+`python tools/strategy_scorer.py --ticker <SYM> --sector <Sector> --live`
+
+The `--live` flag fetches the Alpaca last-trade price, rebuilds entry/stop/targets/shares off it,
+and computes `trade_plan.chase_pct` / `is_chasing` against the prior-session planned zone.
 
 Then enforce guardrails IN ORDER — first failure blocks the trade and emits an 8F alert:
 1. **Score still ≥ 86?** else → watchlist.
 2. **No disqualifiers?** (`disqualifiers` empty) else → block.
 3. **P8 confirmation:** `p8_entry_ok == true` (entry candle green + above-avg volume). If false → do NOT enter; note "waiting for trigger candle".
-4. **Weekly budget:** `weekly_trade_count < 3` (8E) else → block + watchlist for next Monday.
-5. **Position count:** current open positions < 5 (8B) else → block.
-6. **Not already held:** skip if we already hold this ticker.
-7. **Avoid chasing:** if price is already > 3% above the pre-market entry/RSI-40 zone → skip, wait for pullback.
+4. **Avoid chasing:** decision must NOT be `WATCHLIST_CHASE` and `trade_plan.is_chasing` must be false (live price ≤ 3% above planned entry). If chasing → watchlist for a pullback, do not enter.
+5. **Weekly budget:** `weekly_trade_count < 3` (8E) else → block + watchlist for next Monday.
+6. **Position count:** current open positions < 5 (8B) else → block.
+7. **Not already held:** skip if we already hold this ticker.
+
+Only candidates whose `decision == "ENTER_FULL"` (after the live re-score) and that clear all
+guardrails proceed to step 4. Use the `trade_plan` from the **live** re-score for the order.
 
 ### 4. Place the order (PAPER mode)
 For each survivor, use the scorer's `trade_plan`:

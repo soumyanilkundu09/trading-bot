@@ -46,6 +46,8 @@ class AlpacaClient:
         # includes a trailing '/v2' so we never produce '/v2/v2/...'.
         if self.base.endswith("/v2"):
             self.base = self.base[: -len("/v2")]
+        self.data_base = os.getenv("ALPACA_DATA_URL", "https://data.alpaca.markets").rstrip("/")
+        self.data_feed = os.getenv("ALPACA_DATA_FEED", "iex")
         if not self.key or not self.secret:
             raise AlpacaError(
                 "Missing ALPACA_API_KEY / ALPACA_SECRET_KEY. Set them in .env (see SETUP.md)."
@@ -102,6 +104,39 @@ class AlpacaClient:
             return bool(self.get_clock().get("is_open"))
         except Exception:
             return False
+
+    # ---- market data (live price) ----
+    def get_latest_price(self, symbol: str) -> Optional[float]:
+        """Latest trade price from Alpaca's data API — the real execution reference.
+
+        Falls back to the latest quote midpoint if no trade is available.
+        Returns None if the data feed has nothing (e.g. market deep-closed).
+        """
+        headers = {"APCA-API-KEY-ID": self.key, "APCA-API-SECRET-KEY": self.secret}
+        try:
+            r = requests.get(
+                f"{self.data_base}/v2/stocks/{symbol}/trades/latest",
+                params={"feed": self.data_feed}, headers=headers, timeout=20,
+            )
+            if r.status_code == 200:
+                p = (r.json().get("trade") or {}).get("p")
+                if p:
+                    return float(p)
+        except Exception:
+            pass
+        try:
+            r = requests.get(
+                f"{self.data_base}/v2/stocks/{symbol}/quotes/latest",
+                params={"feed": self.data_feed}, headers=headers, timeout=20,
+            )
+            if r.status_code == 200:
+                q = r.json().get("quote") or {}
+                bid, ask = q.get("bp"), q.get("ap")
+                if bid and ask:
+                    return round((float(bid) + float(ask)) / 2, 2)
+        except Exception:
+            pass
+        return None
 
     # ---- positions ----
     def get_positions(self) -> list:

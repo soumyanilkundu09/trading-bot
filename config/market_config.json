@@ -68,6 +68,7 @@
     "max_open_positions": 5,
     "max_trades_per_week": 3,
     "max_stop_loss_pct": 7.0,
+    "max_chase_pct": 3.0,
     "sector_exit_after_consecutive_losses": 2
   },
 

@@ -23,6 +23,7 @@ import argparse
 import json
 import math
 import os
+import sys
 from dataclasses import dataclass, field
 
 import market_data as md
@@ -229,9 +230,14 @@ def check_disqualifiers(a: md.TickerAnalysis, outlook: dict, cfg: dict) -> list:
 # --------------------------------------------------------------------------
 # Trade plan: entry / SL / targets / position size (Part 6 + 8B)
 # --------------------------------------------------------------------------
-def build_trade_plan(a: md.TickerAnalysis, cfg: dict, capital: float, half: bool) -> dict:
+def build_trade_plan(a: md.TickerAnalysis, cfg: dict, capital: float, half: bool,
+                     live_price: float | None = None) -> dict:
     rc = cfg["market"]["risk_controls"]
-    entry = a.price
+    # Size off the REAL execution price when available (Alpaca live), not the
+    # prior-session yfinance close. Stops/targets are anchored to chart structure,
+    # so they stay valid; only the entry reference changes.
+    entry = float(live_price) if live_price else a.price
+    planned_entry = a.price
 
     # Stop-loss: low of trigger (last) candle, fall back to support - 0.5%
     sr = a.support_resistance
@@ -253,12 +259,23 @@ def build_trade_plan(a: md.TickerAnalysis, cfg: dict, capital: float, half: bool
     cap_shares = math.floor(max_position_value / entry) if entry else 0
     shares = int(min(math.floor(raw_shares), cap_shares))
 
-    # Targets: T1 = resistance / RSI60 proxy (use +2R or nearest resistance), T2 = swing high
-    t1 = round(min(sr.get("nearest_resistance", entry * 1.1), entry + 2 * risk_per_share), 2)
-    t2 = round(sr.get("nearest_resistance", entry * 1.15), 2)
+    # Targets: T1 = nearest resistance or +2R, whichever is closer — but always above entry
+    # (if live price already broke above the old resistance, fall back to +2R).
+    resistance = sr.get("nearest_resistance", entry * 1.1)
+    t1 = min(resistance, entry + 2 * risk_per_share)
+    if t1 <= entry:
+        t1 = entry + 2 * risk_per_share
+    t1 = round(t1, 2)
+    t2 = round(max(resistance, entry + 3 * risk_per_share), 2)
+
+    chase_pct = round((entry - planned_entry) / planned_entry * 100, 2) if planned_entry else 0.0
+    max_chase = rc.get("max_chase_pct", 3.0)
 
     return {
         "entry": round(entry, 2),
+        "planned_entry": round(planned_entry, 2),
+        "chase_pct": chase_pct,
+        "is_chasing": bool(chase_pct > max_chase),
         "stop_loss": stop_loss,
         "risk_per_share": round(risk_per_share, 2),
         "stop_loss_pct": round((entry - stop_loss) / entry * 100, 2),
@@ -277,7 +294,8 @@ def build_trade_plan(a: md.TickerAnalysis, cfg: dict, capital: float, half: bool
 # Orchestration
 # --------------------------------------------------------------------------
 def score_ticker(symbol: str, sector_name: str | None = None,
-                 macro: dict | None = None, capital: float | None = None) -> ScoreResult:
+                 macro: dict | None = None, capital: float | None = None,
+                 live_price: float | None = None) -> ScoreResult:
     cfg = load_config()
     if capital is None:
         capital = float(cfg["trading"].get("total_capital", 10000))
@@ -320,7 +338,20 @@ def score_ticker(symbol: str, sector_name: str | None = None,
         decision = "SKIP"
 
     half = decision == "WATCHLIST_HALF"
-    plan = build_trade_plan(a, cfg, capital, half) if decision in ("ENTER_FULL", "WATCHLIST_HALF") else {}
+    plan = (
+        build_trade_plan(a, cfg, capital, half, live_price=live_price)
+        if decision in ("ENTER_FULL", "WATCHLIST_HALF")
+        else {}
+    )
+
+    # Avoid-chasing gate (only meaningful when a live price is supplied at execution time):
+    # if the live price has run > max_chase_pct above the planned (prior-session) entry
+    # zone, downgrade an otherwise-enterable setup to watchlist — never chase.
+    if plan.get("is_chasing"):
+        if decision == "ENTER_FULL":
+            decision = "WATCHLIST_CHASE"
+        elif decision == "WATCHLIST_HALF":
+            decision = "WATCHLIST_CHASE"
 
     return ScoreResult(
         symbol=symbol,
@@ -343,10 +374,22 @@ def main():
     ap.add_argument("--ticker", required=True)
     ap.add_argument("--sector", default=None, help="Sector name (e.g. Technology) for P2")
     ap.add_argument("--capital", type=float, default=None)
+    ap.add_argument("--live-price", type=float, default=None,
+                    help="Override entry with a live execution price (enables avoid-chasing gate)")
+    ap.add_argument("--live", action="store_true",
+                    help="Fetch the live price from Alpaca automatically")
     args = ap.parse_args()
 
+    live_price = args.live_price
+    if args.live and live_price is None:
+        try:
+            from alpaca_client import AlpacaClient
+            live_price = AlpacaClient().get_latest_price(args.ticker.upper())
+        except Exception as e:
+            sys.stderr.write(f"[live] could not fetch live price: {e}\n")
+
     from dataclasses import asdict
-    r = score_ticker(args.ticker.upper(), args.sector, capital=args.capital)
+    r = score_ticker(args.ticker.upper(), args.sector, capital=args.capital, live_price=live_price)
     print(json.dumps(asdict(r), indent=2, default=str))
 
 

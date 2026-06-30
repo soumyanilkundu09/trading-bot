@@ -53,7 +53,17 @@ def main():
     ap.add_argument("--sector", default=None, help="Restrict to one sector")
     ap.add_argument("--relax", action="store_true",
                     help="Widen the daily-RSI prescreen band (diagnostic)")
+    ap.add_argument("--live", action="store_true",
+                    help="Use Alpaca live prices for sizing + avoid-chasing (market-open use)")
     args = ap.parse_args()
+
+    alpaca = None
+    if args.live:
+        try:
+            from alpaca_client import AlpacaClient
+            alpaca = AlpacaClient()
+        except Exception as e:
+            sys.stderr.write(f"[live] Alpaca unavailable, falling back to close prices: {e}\n")
 
     cfg = ss.load_config()
     capital = float(cfg["trading"].get("total_capital", 100000))
@@ -100,7 +110,8 @@ def main():
             {"symbol": sym, "sector": sector, "m_rsi": a.monthly_rsi,
              "w_rsi": a.weekly_rsi, "d_rsi": a.daily_rsi}
         )
-        r = ss.score_ticker(sym, sector, macro=macro, capital=capital)
+        live_price = alpaca.get_latest_price(sym) if alpaca else None
+        r = ss.score_ticker(sym, sector, macro=macro, capital=capital, live_price=live_price)
         if not r.ok:
             continue
         entry = {
@@ -116,7 +127,7 @@ def main():
         }
         if r.decision == "ENTER_FULL":
             report["active"].append(entry)
-        elif r.decision == "WATCHLIST_HALF":
+        elif r.decision in ("WATCHLIST_HALF", "WATCHLIST_CHASE"):
             report["watchlist"].append(entry)
         else:
             report["skipped_or_dq"].append(
