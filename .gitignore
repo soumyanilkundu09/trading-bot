@@ -1,0 +1,22 @@
+# Secrets — NEVER commit
+.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local-only runtime markers
+state/REAL_CONFIRMED

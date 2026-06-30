@@ -1,0 +1,79 @@
+{
+  "target_market": "US",
+  "stock_universe": "SP500_NASDAQ100",
+  "currency": "USD",
+  "session_timezone": "America/New_York",
+
+  "benchmark": {
+    "symbol": "SPY",
+    "yahoo_symbol": "^GSPC",
+    "name": "S&P 500"
+  },
+  "secondary_benchmark": {
+    "symbol": "QQQ",
+    "yahoo_symbol": "^NDX",
+    "name": "Nasdaq 100"
+  },
+  "volatility_index": {
+    "yahoo_symbol": "^VIX",
+    "name": "CBOE VIX",
+    "normal_below": 18,
+    "caution_band": [18, 25],
+    "danger_above": 25
+  },
+  "macro_signals": {
+    "dollar_index_symbol": "DX-Y.NYB",
+    "us_10y_yield_symbol": "^TNX",
+    "sp500_futures_symbol": "ES=F"
+  },
+
+  "sector_etfs": {
+    "Technology": "XLK",
+    "Financials": "XLF",
+    "Healthcare": "XLV",
+    "Energy": "XLE",
+    "Consumer_Discretionary": "XLY",
+    "Consumer_Staples": "XLP",
+    "Industrials": "XLI",
+    "Materials": "XLB",
+    "Utilities": "XLU",
+    "Real_Estate": "XLRE",
+    "Communication_Services": "XLC"
+  },
+
+  "session_timing_et": {
+    "pre_market_check": "08:30",
+    "market_open": "09:30",
+    "market_open_routine": "09:45",
+    "midday_scan": "12:30",
+    "market_close": "16:00",
+    "daily_summary": "16:15",
+    "weekly_review": "16:15"
+  },
+
+  "scanner_filters": {
+    "monthly_rsi_min": 60,
+    "weekly_rsi_min": 60,
+    "daily_rsi_min": 35,
+    "daily_rsi_max": 48,
+    "min_market_cap_usd": 2000000000,
+    "min_avg_volume": 1000000,
+    "exclude_penny_below_price": 5.0
+  },
+
+  "risk_controls": {
+    "risk_per_trade_pct": 2.0,
+    "half_position_risk_pct": 1.0,
+    "max_position_pct": 5.0,
+    "max_open_positions": 5,
+    "max_trades_per_week": 3,
+    "max_stop_loss_pct": 7.0,
+    "sector_exit_after_consecutive_losses": 2
+  },
+
+  "scoring_thresholds": {
+    "full_position_min": 86,
+    "watchlist_min": 65,
+    "max_score": 108
+  }
+}

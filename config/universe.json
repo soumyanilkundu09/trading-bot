@@ -1,0 +1,14 @@
+{
+  "_comment": "Scan universe: liquid S&P 500 / Nasdaq 100 names grouped by sector. Sector keys match config/market_config.json sector_etfs. Trim or extend freely; the scanner iterates every symbol here.",
+  "Technology": ["AAPL", "MSFT", "NVDA", "AVGO", "AMD", "CRM", "ADBE", "ORCL", "CSCO", "ACN", "INTC", "QCOM", "TXN", "NOW", "INTU", "AMAT", "MU", "LRCX", "ANET", "PANW"],
+  "Communication_Services": ["GOOGL", "META", "NFLX", "DIS", "TMUS", "VZ", "T", "CMCSA"],
+  "Consumer_Discretionary": ["AMZN", "TSLA", "HD", "MCD", "NKE", "LOW", "SBUX", "BKNG", "TJX", "ABNB"],
+  "Consumer_Staples": ["WMT", "PG", "COST", "KO", "PEP", "PM", "MDLZ", "CL"],
+  "Financials": ["BRK.B", "JPM", "V", "MA", "BAC", "WFC", "GS", "MS", "AXP", "SCHW", "BLK", "C"],
+  "Healthcare": ["LLY", "UNH", "JNJ", "MRK", "ABBV", "TMO", "ABT", "DHR", "PFE", "AMGN", "ISRG", "VRTX"],
+  "Industrials": ["CAT", "GE", "RTX", "HON", "UNP", "BA", "DE", "LMT", "UPS", "ETN"],
+  "Energy": ["XOM", "CVX", "COP", "SLB", "EOG", "MPC", "PSX"],
+  "Materials": ["LIN", "SHW", "FCX", "NEM", "APD"],
+  "Utilities": ["NEE", "SO", "DUK", "CEG"],
+  "Real_Estate": ["PLD", "AMT", "EQIX", "O"]
+}

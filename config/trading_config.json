@@ -1,0 +1,26 @@
+{
+  "trading_mode": "PAPER",
+  "_comment_trading_mode": "PAPER is the only safe default. To go live: set this to REAL, set alpaca_base_url to the live endpoint, AND a human must type the confirmation_phrase exactly when prompted. REAL mode is session-scoped per strategy 8A.",
+
+  "alpaca_base_url": "https://paper-api.alpaca.markets",
+  "alpaca_live_base_url": "https://api.alpaca.markets",
+  "alpaca_data_url": "https://data.alpaca.markets",
+
+  "total_capital": 10000,
+  "_comment_total_capital": "Set this to match your actual Alpaca paper account balance. The agent re-reads live equity from Alpaca each run; this value is a fallback/sanity bound only.",
+
+  "confirmation_phrase": "CONFIRM REAL TRADING",
+
+  "order_settings": {
+    "order_type": "market",
+    "time_in_force": "day",
+    "extended_hours": false,
+    "use_bracket_orders": true
+  },
+
+  "notification_settings": {
+    "telegram_enabled": true,
+    "notify_on_no_trade": true,
+    "notify_on_guardrail_block": true
+  }
+}
