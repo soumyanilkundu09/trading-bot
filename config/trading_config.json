@@ -6,7 +6,7 @@
   "alpaca_live_base_url": "https://api.alpaca.markets",
   "alpaca_data_url": "https://data.alpaca.markets",
 
-  "total_capital": 10000,
+  "total_capital": 100000,
   "_comment_total_capital": "Set this to match your actual Alpaca paper account balance. The agent re-reads live equity from Alpaca each run; this value is a fallback/sanity bound only.",
 
   "confirmation_phrase": "CONFIRM REAL TRADING",

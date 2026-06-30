@@ -42,6 +42,10 @@ class AlpacaClient:
         self.key = os.getenv("ALPACA_API_KEY")
         self.secret = os.getenv("ALPACA_SECRET_KEY")
         self.base = os.getenv("ALPACA_BASE_URL", "https://paper-api.alpaca.markets").rstrip("/")
+        # The client appends '/v2/...' to every path. Tolerate a base that already
+        # includes a trailing '/v2' so we never produce '/v2/v2/...'.
+        if self.base.endswith("/v2"):
+            self.base = self.base[: -len("/v2")]
         if not self.key or not self.secret:
             raise AlpacaError(
                 "Missing ALPACA_API_KEY / ALPACA_SECRET_KEY. Set them in .env (see SETUP.md)."
