@@ -53,7 +53,7 @@
 
   "scanner_filters": {
     "monthly_rsi_min": 60,
-    "weekly_rsi_min": 60,
+    "weekly_rsi_min": 40,
     "daily_rsi_min": 35,
     "daily_rsi_max": 48,
     "min_market_cap_usd": 2000000000,
@@ -73,7 +73,7 @@
   },
 
   "scoring_thresholds": {
-    "full_position_min": 86,
+    "full_position_min": 80,
     "watchlist_min": 65,
     "max_score": 108
   }

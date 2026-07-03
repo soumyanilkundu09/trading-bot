@@ -32,9 +32,9 @@ SETUP.md     one-time infrastructure guide
 
 ## The strategy in one breath
 Global gate (S&P monthly RSI > 60, VIX calm) **must** pass. Then each candidate is scored on
-**10 weighted parameters (108 pts)**: monthly/weekly/daily RSI alignment, sector strength,
+**10 weighted parameters (100 pts)**: monthly/weekly/daily RSI alignment, sector strength,
 support/CIP/gap entry zone, distance from resistance, volume confirmation, range-shift/divergence.
-**≥86 → full position, 65–85 → half/watchlist, <86 disqualified → skip.** Long-only, equity-only.
+**≥80 → full position, 65–79 → half/watchlist, <65 or disqualified → skip.** Long-only, equity-only.
 
 ## Guardrails (non-negotiable, code-enforced)
 - PAPER mode by default; live requires deliberate manual enablement.

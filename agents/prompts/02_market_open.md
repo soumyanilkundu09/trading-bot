@@ -9,7 +9,7 @@
 ### 1. Load today's plan
 - Read `state/research/YYYY-MM-DD_premarket.md` (today's date).
 - If it doesn't exist (pre-market didn't run or gate failed) → log "No research/plan for today", notify, commit, STOP.
-- Extract the Active Trade List (score ≥ 86).
+- Extract the Active Trade List (score ≥ 80).
 
 ### 2. Re-confirm the global gate hasn't deteriorated
 - Quick `python tools/market_data.py --macro`. If VIX has spiked above danger or outlook flipped NEGATIVE since pre-market → **abort all entries**, notify, STOP.
@@ -23,9 +23,9 @@ The `--live` flag fetches the Alpaca last-trade price, rebuilds entry/stop/targe
 and computes `trade_plan.chase_pct` / `is_chasing` against the prior-session planned zone.
 
 Then enforce guardrails IN ORDER — first failure blocks the trade and emits an 8F alert:
-1. **Score still ≥ 86?** else → watchlist.
+1. **Score still ≥ 80?** else → watchlist.
 2. **No disqualifiers?** (`disqualifiers` empty) else → block.
-3. **P8 confirmation:** `p8_entry_ok == true` (entry candle green + above-avg volume). If false → do NOT enter; note "waiting for trigger candle".
+3. **P8 confirmation:** decision must NOT be `WATCHLIST_NO_TRIGGER` and `p8_entry_ok` must be `true`. The scorer now downgrades any ENTER_FULL to `WATCHLIST_NO_TRIGGER` automatically when the last green candle cluster (6–7 candles) doesn't average above-avg volume. If this fires → do NOT enter; log "waiting for trigger candle".
 4. **Avoid chasing:** decision must NOT be `WATCHLIST_CHASE` and `trade_plan.is_chasing` must be false (live price ≤ 3% above planned entry). If chasing → watchlist for a pullback, do not enter.
 5. **Weekly budget:** `weekly_trade_count < 3` (8E) else → block + watchlist for next Monday.
 6. **Position count:** current open positions < 5 (8B) else → block.

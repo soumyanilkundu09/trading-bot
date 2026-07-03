@@ -4,10 +4,10 @@ scan.py — Pre-market universe scanner orchestrator.
 Workflow (matches agents/prompts/01_pre_market.md):
   1. Evaluate the global gate once (shared across all tickers).
   2. If gate not POSITIVE -> stop, report.
-  3. Pre-screen every universe ticker cheaply (monthly RSI > 60, weekly RSI > 60,
+  3. Pre-screen every universe ticker cheaply (monthly RSI > 60, weekly RSI > 40,
      daily RSI in [scan band]).
-  4. Fully score survivors with the 12-parameter engine.
-  5. Classify into Active (>=86) / Watchlist (65-85) / Skip, rank by score.
+  4. Fully score survivors with the 10-parameter engine.
+  5. Classify into Active (>=80) / Watchlist (65-79) / Skip, rank by score.
   6. Print a JSON report the agent turns into a research log.
 
 Usage:
@@ -127,7 +127,7 @@ def main():
         }
         if r.decision == "ENTER_FULL":
             report["active"].append(entry)
-        elif r.decision in ("WATCHLIST_HALF", "WATCHLIST_CHASE"):
+        elif r.decision in ("WATCHLIST_HALF", "WATCHLIST_CHASE", "WATCHLIST_NO_TRIGGER"):
             report["watchlist"].append(entry)
         else:
             report["skipped_or_dq"].append(

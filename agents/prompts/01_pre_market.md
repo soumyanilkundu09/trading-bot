@@ -26,8 +26,8 @@ For each ticker in `config/universe.json`, run the scorer. Practical approach:
 - Batch them; capture each result's score, decision, passed/failed params, disqualifiers, and trade_plan.
 
 ### 4. Rank and classify
-- **Active Trade List** (score ≥ 86, no disqualifiers): eligible for execution at market-open.
-- **Watchlist** (65–85): revisit; update `state/watchlist.md`.
+- **Active Trade List** (score ≥ 80, no disqualifiers): eligible for execution at market-open.
+- **Watchlist** (65–79): revisit; update `state/watchlist.md`.
 - **Skip** (< 65 or disqualified): note briefly.
 
 ### 5. Write the research log

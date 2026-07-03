@@ -39,20 +39,21 @@ def load_config() -> dict:
     return {"market": market, "trading": trading}
 
 
-# Parameter weights (Part 9). P1 is a gate (no score), P8 is implicit (required, not scored).
+# Parameter weights (Part 9). P1 is a gate (no score).
+# P8 is now a scored parameter (weight 8) AND still enforced as a gate before ordering.
 WEIGHTS = {
     "P2": 12,   # Sector Strong
-    "P3": 12,   # Weekly RSI > 60
     "P4": 10,   # Weekly RSI > 40
     "P5": 6,    # Weekly Range Shift / Support @ 40
-    "P6": 8,    # High Green Volume Weekly
-    "P7": 12,   # Daily at Support / CIP / Gap
-    "P9": 14,   # Not Near Resistance
-    "P10": 10,  # Daily Prev Candle Red, Low Volume
+    "P6": 8,    # High Green Volume Weekly (last 5-6 green weekly candles vs 20-wk avg)
+    "P7": 10,   # Daily at Support / CIP / Gap
+    "P8": 8,    # High Green Volume Daily (last 6-7 green daily candles vs 20-day avg)
+    "P9": 12,   # Not Near Resistance
+    "P10": 10,  # Recent Red Candles Low Volume (last 3-4 red candles vs 20-day avg)
     "P11": 12,  # Daily RSI @ 40
     "P12": 12,  # Bullish Range Shift / Divergence
 }
-MAX_SCORE = sum(WEIGHTS.values())  # 108
+MAX_SCORE = sum(WEIGHTS.values())  # 116
 
 
 # --------------------------------------------------------------------------
@@ -140,10 +141,6 @@ def score_parameters(a: md.TickerAnalysis, sector: dict | None) -> dict:
     else:
         res["P2"] = (False, 0, "sector data unavailable")
 
-    # P3 — Weekly RSI > 60
-    p3 = a.weekly_rsi >= 60
-    res["P3"] = (p3, WEIGHTS["P3"] if p3 else 0, f"weekly_rsi={a.weekly_rsi}")
-
     # P4 — Weekly RSI > 40 (Bearish Range Shift guard)
     p4 = a.weekly_rsi >= 40
     res["P4"] = (p4, WEIGHTS["P4"] if p4 else 0, f"weekly_rsi={a.weekly_rsi}")
@@ -153,13 +150,13 @@ def score_parameters(a: md.TickerAnalysis, sector: dict | None) -> dict:
     p5 = bool(rsw.get("bullish_range_shift")) or (a.weekly_rsi >= 60 and not rsw.get("bearish_range_shift"))
     res["P5"] = (p5, WEIGHTS["P5"] if p5 else 0, f"weekly_brs={rsw.get('bullish_range_shift')}")
 
-    # P6 — High Green Volume Weekly (proxy: any recent strong green weekly candle).
-    # We approximate using daily volume strength on the dominant up-moves.
-    vol = a.volume
-    last = vol.get("last_candle", {})
-    p6 = last.get("vol_vs_avg", 0) >= 1.3 and last.get("green", False)
+    # P6 — High Green Volume Weekly: last 5-6 green weekly candles must average
+    # above the 20-week average volume (institutional participation on the weekly).
+    wvol = a.weekly_volume
+    wgreen = wvol.get("recent_green", {})
+    p6 = wgreen.get("count", 0) > 0 and wgreen.get("mean_vol_vs_avg", 0) >= 1.0
     res["P6"] = (p6, WEIGHTS["P6"] if p6 else 0,
-                 f"last_vol_vs_avg={last.get('vol_vs_avg')} green={last.get('green')}")
+                 f"last{wgreen.get('count')}wkgreen_vol_vs_20wk_avg={wgreen.get('mean_vol_vs_avg')}")
 
     # P7 — Daily at Support / CIP / Gap (within 2%)
     sr = a.support_resistance
@@ -170,15 +167,33 @@ def score_parameters(a: md.TickerAnalysis, sector: dict | None) -> dict:
     res["P7"] = (p7, WEIGHTS["P7"] if p7 else 0,
                  f"dist_support={sr.get('dist_to_support_pct')}% cip={in_cip} gap={in_gap}")
 
+    # P8 — High Green Volume Daily: last 6-7 green daily candles average above
+    # the 20-day average volume (sustained accumulation / Bullish Loud Move daily).
+    # Also enforced as a hard gate before ordering (p8_entry_ok field).
+    vol = a.volume
+    last = vol.get("last_candle", {})
+    green_cluster = vol.get("recent_green", {})
+    p8 = bool(
+        last.get("green")
+        and green_cluster.get("count", 0) > 0
+        and green_cluster.get("mean_vol_vs_avg", 0) >= 1.0
+    )
+    res["P8"] = (p8, WEIGHTS["P8"] if p8 else 0,
+                 f"trigger_green={last.get('green')} last{green_cluster.get('count')}dgreen_vol_vs_20d_avg={green_cluster.get('mean_vol_vs_avg')}")
+
     # P9 — Not Near Previous Resistance (>= 8% upside)
     p9 = sr.get("dist_to_resistance_pct", 0) >= 8.0
     res["P9"] = (p9, WEIGHTS["P9"] if p9 else 0, f"dist_resistance={sr.get('dist_to_resistance_pct')}%")
 
-    # P10 — Daily Prev Candle Red with Low Volume (Adverse Low Move)
-    prev = vol.get("prev_candle", {})
-    p10 = (not prev.get("green", True)) and prev.get("vol_vs_avg", 99) < 1.0
+    # P10 — Recent Red Candles on Low Volume (Adverse Low Move).
+    # Judge the last 3-4 red candles vs the 20-day average, not just the one
+    # candle before entry: low avg red volume = weak sellers = fresh entry OK;
+    # high avg red volume = conviction selling = bearish, avoid.
+    red = vol.get("recent_red", {})
+    red_ratio = red.get("mean_vol_vs_avg", 99)
+    p10 = red.get("count", 0) > 0 and red_ratio < 1.0
     res["P10"] = (p10, WEIGHTS["P10"] if p10 else 0,
-                  f"prev_red={not prev.get('green')} prev_vol_vs_avg={prev.get('vol_vs_avg')}")
+                  f"last{red.get('count')}red_vol_vs_avg={red_ratio}")
 
     # P11 — Daily RSI @ 40 (38–45 zone)
     p11 = 38 <= a.daily_rsi <= 45
@@ -213,6 +228,15 @@ def check_disqualifiers(a: md.TickerAnalysis, outlook: dict, cfg: dict) -> list:
     last = a.volume.get("last_candle", {})
     if (not last.get("green", True)) and last.get("vol_vs_avg", 0) >= 1.5:
         dq.append("Red daily candle with HIGH volume (Bearish Loud Move)")
+
+    # Conviction selling across the recent pullback: the last 3-4 red candles
+    # averaging at/above the 20-day volume is a bearish view — avoid entry (P10).
+    red = a.volume.get("recent_red", {})
+    if red.get("count", 0) >= 2 and red.get("mean_vol_vs_avg", 0) >= 1.0:
+        dq.append(
+            f"Last {red.get('count')} red candles on HIGH volume "
+            f"({red.get('mean_vol_vs_avg')}x avg) — conviction selling"
+        )
 
     if a.weekly_rsi >= 80 and a.support_resistance.get("dist_to_resistance_pct", 99) < 3:
         dq.append("Extended near 52-wk high with RSI > 80")
@@ -320,9 +344,8 @@ def score_ticker(symbol: str, sector_name: str | None = None,
 
     disq = check_disqualifiers(a, outlook, cfg)
 
-    # P8 implicit: entry candle green + above-avg volume
-    last = a.volume.get("last_candle", {})
-    p8_ok = bool(last.get("green") and last.get("vol_vs_avg", 0) >= 1.0)
+    # P8 is now a scored parameter — derive the gate flag from the scored result.
+    p8_ok = bool(params.get("P8", (False,))[0])
 
     # Decision
     thr = cfg["market"]["scoring_thresholds"]
@@ -343,6 +366,12 @@ def score_ticker(symbol: str, sector_name: str | None = None,
         if decision in ("ENTER_FULL", "WATCHLIST_HALF")
         else {}
     )
+
+    # P8 gate: if the entry trigger candle isn't green with sustained above-avg green volume,
+    # we cannot enter today — downgrade to watchlist and wait for the trigger candle.
+    # This must run BEFORE the chase gate so that a non-triggering candle is never ordered.
+    if decision == "ENTER_FULL" and not p8_ok:
+        decision = "WATCHLIST_NO_TRIGGER"
 
     # Avoid-chasing gate (only meaningful when a live price is supplied at execution time):
     # if the live price has run > max_chase_pct above the planned (prior-session) entry

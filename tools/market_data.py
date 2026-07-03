@@ -321,7 +321,8 @@ def detect_cip(df: pd.DataFrame, window: int = 10) -> dict:
     }
 
 
-def volume_analysis(df: pd.DataFrame, avg_window: int = 20) -> dict:
+def volume_analysis(df: pd.DataFrame, avg_window: int = 20,
+                    green_lookback: int = 7, red_lookback: int = 4) -> dict:
     """Analyze the latest candle and the prior candle vs average volume."""
     if len(df) < avg_window + 2:
         avg_window = max(5, len(df) - 2)
@@ -341,10 +342,29 @@ def volume_analysis(df: pd.DataFrame, avg_window: int = 20) -> dict:
             "body_pct_of_range": round(float(body / rng), 2),
         }
 
+    def recent_by_color(green: bool, n: int) -> dict:
+        """Summarize the last `n` candles of one color vs the 20-day average volume.
+
+        P8 uses the green cluster (sustained accumulation); P10 uses the red
+        cluster (character of the pullback). See Malkan strategy P8 / P10.
+        """
+        mask = (df["close"] > df["open"]) if green else (df["close"] < df["open"])
+        sub = df[mask].tail(n)
+        if sub.empty or not avg_vol:
+            return {"count": 0, "mean_vol_vs_avg": 0.0, "n_above_avg": 0}
+        return {
+            "count": int(len(sub)),
+            "mean_vol_vs_avg": round(float(sub["volume"].mean()) / avg_vol, 2),
+            "n_above_avg": int((sub["volume"] > avg_vol).sum()),
+        }
+
     return {
         "avg_volume": round(avg_vol, 0),
         "last_candle": candle(last),
         "prev_candle": candle(prev),
+        # Sustained-buying / pullback-character clusters (see P8, P10).
+        "recent_green": recent_by_color(green=True, n=green_lookback),
+        "recent_red": recent_by_color(green=False, n=red_lookback),
     }
 
 
@@ -367,6 +387,7 @@ class TickerAnalysis:
     gaps: list = field(default_factory=list)
     cip: dict = field(default_factory=dict)
     volume: dict = field(default_factory=dict)
+    weekly_volume: dict = field(default_factory=dict)
     error: str = ""
 
 
@@ -404,6 +425,7 @@ def analyze_ticker(symbol: str) -> TickerAnalysis:
         gaps=find_gaps(daily),
         cip=detect_cip(daily),
         volume=volume_analysis(daily),
+        weekly_volume=volume_analysis(weekly, avg_window=20, green_lookback=6, red_lookback=4),
     )
 
 

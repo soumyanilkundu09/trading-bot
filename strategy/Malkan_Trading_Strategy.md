@@ -188,23 +188,23 @@ A "Loud Move" refers to a **significant price move accompanied by exceptionally 
 ### 1.7 Adverse Low Move (Prior Red Candle with Low Volume)
 
 **Definition:**
-An "Adverse Low Move" refers to a **correction or pullback candle that moves against the primary trend but does so on LOW volume**. In Malkan's framework, this is specifically the **prior day's red candle with low volume** before the entry signal candle.
+An "Adverse Low Move" refers to a **correction or pullback that moves against the primary trend but does so on LOW volume**. In Malkan's framework, this is read across the **last 3–4 red candles** of the recent pullback (not just the single prior candle) before the entry signal candle.
 
 **Why It Matters:**
-- A red candle on **low volume** signals that the selling is **not conviction-based** — sellers are weak.
+- Red candles on **low volume** signal that the selling is **not conviction-based** — sellers are weak.
 - It suggests the pullback is a **natural, healthy correction** within the larger bullish trend, not a trend reversal.
 - This sets up the ideal scenario: weakness without seller conviction = buyers waiting to step in.
 
 **Qualifying Conditions for Adverse Low Move (Bullish Setup):**
-1. The previous day's candle is **red (bearish)**.
-2. Volume on that red candle is **below average** (lower than the 10-day or 20-day average volume).
+1. The recent pullback's **last 3–4 candles are red (bearish)**.
+2. Their **average volume is below the 20-day average volume** (weak sellers).
 3. Price has not broken below a key support level.
 4. RSI has pulled back but is still in the 40–50 zone (not collapsing).
 
-**What Does NOT Qualify:**
-- A red candle with high volume (this is a Bearish Loud Move — avoid the trade).
-- Multiple consecutive red candles with increasing volume (distribution pattern — avoid).
-- A red candle that breaks a key support level (structural damage — avoid).
+**What Does NOT Qualify (bearish — avoid the trade):**
+- The last 3–4 red candles carry **high (above 20-day average) volume** — conviction selling / distribution.
+- A single red candle with high volume (this is a Bearish Loud Move).
+- A red candle that breaks a key support level (structural damage).
 
 ---
 
@@ -411,20 +411,17 @@ ELSE:
 
 ---
 
-### Parameter 6 — HIGH VOLUME WEEKLY (Bullish Loud Move on Weekly)
+### Parameter 6 — HIGH GREEN VOLUME WEEKLY (Sustained Bullish Loud Move on Weekly)
 
-**Definition:** There must be evidence of at least one significant high-volume bullish candle on the Weekly timeframe in the recent trend, confirming institutional/smart money participation.
+**Definition:** The weekly up-move must show *sustained* institutional buying across multiple weeks — not just a single spike. Look at the **last 5–6 green (bullish) weekly candles** — their volume should, on average, be **higher than the 20-week average volume**. This confirms that smart money has been consistently participating in the weekly trend, not just a one-week pop.
 
 **Checks:**
-- Look at the weekly chart over the last 8–12 weeks.
-- Identify if there is at least one week where:
-  - Candle is **green (bullish)** ✓
-  - Volume is **significantly above the 10-week average** (ideally 1.5x–2x or more) ✓
-  - Price closed **near the week's high** ✓
-- The high-volume week should ideally be part of the breakout or initial trending move, not a recent blow-off top.
+- Across the **last 5–6 green weekly candles**, the **average volume is above the 20-week average volume** ✓
+- The buying is spread across multiple green weeks (accumulation), not concentrated in a single anomalous week ✓
+- Compare each green weekly candle's volume to the **20-week average volume** as the baseline ✓
 
-**Satisfied:** At least one clear high-volume bullish weekly candle exists in the current trend structure.
-**Not Satisfied:** All recent bullish weeks have below-average or average volume (weak trend).
+**Satisfied:** The last 5–6 green weekly candles average above the 20-week average volume (institutional accumulation confirmed).
+**Not Satisfied:** The recent green weekly candles are on below-average volume (weak trend, no institutional participation).
 
 ---
 
@@ -453,18 +450,18 @@ ELSE:
 
 ### Parameter 8 — HIGH GREEN VOLUME (DAILY)
 
-**Definition:** On the entry day (or the most recent completed trading day), there must be a high-volume bullish (green) candle on the daily chart, confirming buying interest at the support level.
+**Definition:** The recent up-move must show *sustained* buying, not a single spike. Look at the **last 6–7 green (bullish) daily candles** — their volume should, on average, be **higher than the 20-day average volume**. Green days trading on above-average volume confirm that buyers (including institutions) are consistently stepping in, not just a one-day pop.
 
 **Checks:**
-- Daily candle is **green (close > open)** ✓
-- Volume on this candle is **above the 20-day average volume** (minimum 1.5x, ideally 2x+) ✓
-- Candle body is meaningful (not a doji or spinning top) ✓
-- Price closed in the **upper 50% of the candle's range** ✓
+- The entry / most-recent completed daily candle is **green (close > open)** ✓ (the trigger candle)
+- Across the **last 6–7 green daily candles**, the **average volume is above the 20-day average volume** (ideally the majority of them individually clear the 20-day average) ✓
+- The buying is spread across multiple green days (accumulation), not concentrated in one anomalous candle ✓
+- The trigger candle body is meaningful (not a doji) and closes in the upper half of its range ✓
 
-**Satisfied:** Green daily candle with above-average volume at/near support.
-**Not Satisfied:** Red candle OR green candle with below-average volume (no conviction in the bounce).
+**Satisfied:** The last 6–7 green daily candles average above-average volume, and the entry candle is green.
+**Not Satisfied:** The recent green candles are on below-average volume (no conviction / distribution), OR the entry candle is red.
 
-> This is the "Bullish Loud Move on Daily" — the daily entry trigger candle. This is the most important single-day signal.
+> This is the "sustained Bullish Loud Move on Daily" — buyers repeatedly showing up on the green days. Measure green-candle volume against the **20-day average volume**. P8 carries **8 points** and is additionally enforced as a hard gate: even if P8 is scored as failed (partial trade still qualifies by score), the bot will **not execute an order** unless `p8_entry_ok = true`.
 
 ---
 
@@ -489,20 +486,22 @@ ELSE:
 
 ---
 
-### Parameter 10 — DAILY PREVIOUS CANDLE RED WITH LOW VOLUME (Adverse Low Move)
+### Parameter 10 — RECENT RED CANDLES ON LOW VOLUME (Adverse Low Move)
 
-**Definition:** The candle immediately before the entry signal candle must be **red (bearish) with below-average volume**. This confirms the pullback is a weak, low-conviction correction — not a reversal.
+**Definition:** Judge the character of the pullback across the **last 3–4 red (bearish) candles** — not just the single candle immediately before entry. Compare the volume of those red candles to the **20-day average volume**:
+- **Low red volume** (below the 20-day average) → selling has **no conviction**; the pullback is weak and healthy → **fresh entry can be considered**.
+- **High red volume** (at/above the 20-day average) → conviction selling / distribution → **bearish; avoid the entry**.
 
 **Checks:**
-- The candle just before the entry candle is **red (close < open)** ✓
-- Volume on this red candle is **below the 20-day average volume** ✓
-- Price did not break below the key support level on this red candle ✓
-- RSI on this candle was pulling back toward 40, not breaking below it ✓
+- Take the **last 3–4 red daily candles** in the recent pullback ✓
+- Their **average volume is below the 20-day average volume** (weak sellers) ✓
+- None of those red candles broke below the key support level ✓
+- RSI pulled back toward 40 over these candles but did not collapse below it ✓
 
-**Satisfied:** Prior candle is red with low volume.
-**Not Satisfied:** Prior candle is red with high volume (danger — strong selling), OR prior candle is green (no pullback to enter).
+**Satisfied:** The last 3–4 red candles are on below-average (low) volume → not bearish, fresh entry allowed.
+**Not Satisfied:** The last 3–4 red candles carry high (above-average) volume → conviction selling, avoid entry. (A single strong high-volume red candle is a Bearish Loud Move — also avoid.)
 
-> This is the "Adverse Low Move" concept — the market breathed in (corrected weakly) before the entry candle confirms the next move up.
+> This is the "Adverse Low Move" concept generalized to the recent pullback: the market breathed in (corrected weakly, on light volume) before the entry candle confirms the next move up. Heavy volume on the recent red candles instead signals real selling pressure and cancels the setup.
 
 ---
 
@@ -561,27 +560,27 @@ STEP 2: STOCK SCAN & SECTOR CHECK
 │   YES → Proceed to STEP 3
 │   NO  → ❌ SKIP STOCK
 
-STEP 3: SCORE THE 10 WEIGHTED PARAMETERS (excluding P1 gate and P8 implicit)
+STEP 3: SCORE THE 10 WEIGHTED PARAMETERS (P1 is a gate only — not scored)
 │
-├── P2:  Sector Strong                        [✓=12 / ✗=0]
-├── P3:  Weekly RSI > 60                      [✓=12 / ✗=0]
-├── P4:  Weekly RSI > 40                      [✓=10 / ✗=0]
-├── P5:  Weekly Range Shift / Support @ 40    [✓= 6 / ✗=0]
-├── P6:  High Green Volume Weekly             [✓= 8 / ✗=0]
-├── P7:  Daily at Support / CIP / Gap         [✓=12 / ✗=0]
-├── P9:  Not Near Previous Resistance         [✓=14 / ✗=0]
-├── P10: Daily Prev Candle Red, Low Volume    [✓=10 / ✗=0]
-├── P11: Daily RSI @ 40                       [✓=12 / ✗=0]
-└── P12: Bullish Range Shift / Divergence     [✓=12 / ✗=0]
+├── P2:  Sector Strong                            [✓=12 / ✗=0]
+├── P4:  Weekly RSI > 40                          [✓=10 / ✗=0]
+├── P5:  Weekly Range Shift / Support @ 40        [✓= 6 / ✗=0]
+├── P6:  High Green Volume Weekly (last 5-6 wks)  [✓= 8 / ✗=0]
+├── P7:  Daily at Support / CIP / Gap             [✓=10 / ✗=0]
+├── P8:  High Green Volume Daily (last 6-7 days)  [✓= 8 / ✗=0]  ← also hard gate
+├── P9:  Not Near Previous Resistance             [✓=12 / ✗=0]
+├── P10: Recent Red Candles Low Vol (last 3-4)    [✓=10 / ✗=0]
+├── P11: Daily RSI @ 40                           [✓=12 / ✗=0]
+└── P12: Bullish Range Shift / Divergence         [✓=12 / ✗=0]
 
-TOTAL SCORE: ___ / 108
+TOTAL SCORE: ___ / 116
 
-STEP 3b: CHECK IMPLICIT CONDITION (P8 — not scored but mandatory for execution)
-└── Entry candle: Green AND above-average volume?
-    YES → Allow execution   NO → DO NOT execute (wait for next candle)
+STEP 3b: P8 GATE (scored above AND mandatory for execution)
+└── p8_entry_ok = true? (trigger green + last 6-7 green days avg vol > 20d avg)
+    YES → Allow execution   NO → WATCHLIST_NO_TRIGGER (wait for trigger candle)
 
 STEP 4: DECISION
-├── Score ≥ 86  → ✅ ENTER TRADE — Full position
+├── Score ≥ 80  → ✅ ENTER TRADE — Full position
 ├── Score 65–85 → ⚠️  WATCHLIST / Half position — revisit next session
 └── Score < 65  → ❌ SKIP STOCK
 ```
@@ -777,19 +776,18 @@ All weights are user-defined and reflect the relative importance of each signal 
 | Parameter | Weight | Group | Rationale |
 |---|---|---|---|
 | P2: Sector Strong | **12** | Weekly / Macro | Sector tailwind amplifies individual stock moves |
-| P3: Weekly RSI > 60 | **12** | Weekly / Macro | Primary trend confirmation — stock is in bullish range |
 | P4: Weekly RSI > 40 | **10** | Weekly / Macro | Guards against a completed Bearish Range Shift on weekly |
 | P5: Weekly Range Shift / Support @ 40 | **6** | Weekly / Macro | BRS on weekly = structural bullishness confirmed |
-| P6: High Green Volume Weekly | **8** | Weekly / Macro | Institutional participation in the weekly trend |
-| P7: Daily at Support / CIP / Gap | **12** | Daily / Entry | Entry zone precision — price at the right level |
-| P8: High Green Volume Daily | **—** | Daily / Entry | Implicit confirming condition (subsumed by P7 entry zone + P11 RSI; not separately scored) |
-| P9: Not Near Resistance | **14** | Daily / Risk | Risk/reward filter — highest weight; entering near resistance kills R:R |
-| P10: Daily Prev Candle Red, Low Volume | **10** | Daily / Entry | Adverse Low Move — confirms sellers are weak |
+| P6: High Green Volume Weekly (last 5–6 green weekly candles) | **8** | Weekly / Macro | Sustained institutional accumulation on the weekly — last 5–6 green weeks avg above 20-week avg volume |
+| P7: Daily at Support / CIP / Gap | **10** | Daily / Entry | Entry zone precision — price at the right level |
+| P8: High Green Volume Daily (last 6–7 green daily candles) | **8** | Daily / Entry | Sustained accumulation on the daily — last 6–7 green days avg above 20-day avg volume + green trigger candle |
+| P9: Not Near Resistance | **12** | Daily / Risk | Risk/reward filter — entering near resistance kills R:R |
+| P10: Recent Red Candles on Low Volume (last 3–4) | **10** | Daily / Entry | Adverse Low Move — last 3–4 red candles below 20-day avg volume = weak sellers |
 | P11: Daily RSI @ 40 | **12** | Daily / Entry | GFS Son trigger — the precise inflection point |
 | P12: BRS / Daily Divergence | **12** | Daily / Entry | Momentum exhaustion confirmation — reversal/continuation signal |
-| **Total** | **108** | | |
+| **Total** | **116** | | |
 
-> **P8 Note:** High Green Volume on the Daily (entry candle) is a **required qualitative condition** for trade execution. If the entry candle is not green with above-average volume, the trade is not taken regardless of the score. It is not scored separately because it is implicit in executing on the correct setup.
+> **P8 Note:** P8 carries **8 scored points** AND is enforced as a hard execution gate. Even if a stock scores ≥80 on the other parameters, the bot will NOT place an order unless `p8_entry_ok = true` (trigger candle green + last 6–7 green daily candles average above 20-day avg volume). A failed P8 downgrades the decision to `WATCHLIST_NO_TRIGGER` — revisit next session.
 
 ---
 
@@ -799,7 +797,7 @@ Total possible score: **108 points** (10 scored parameters).
 
 | Score | Action | Reasoning |
 |---|---|---|
-| **≥ 86 points** | ✅ **Full position** | ≥ 8 average-weight parameters passing |
+| **≥ 80 points** | ✅ **Full position** | ≥ 8 average-weight parameters passing |
 | **65 – 85 points** | ⚠️ **Half position / Watchlist** | Strong setup but not fully confirmed — revisit next session |
 | **< 65 points** | ❌ **Skip** | Setup is not mature enough |
 
@@ -862,7 +860,7 @@ Total possible score: **108 points** (10 scored parameters).
    → Score each parameter → Total score
 
 4. RANK CANDIDATES by weighted score (out of 108)
-   → Score ≥ 86  → Active Trade List (Full position eligible)
+   → Score ≥ 80  → Active Trade List (Full position eligible)
    → Score 65–85 → Watchlist (revisit next session)
    → Score < 65  → Skip
 
@@ -900,7 +898,7 @@ Total possible score: **108 points** (10 scored parameters).
 
 2. RE-SCORE WATCHLIST
    → Re-evaluate each watchlist stock against all 10 weighted parameters
-   → If score improves to ≥ 86 → promote to Active Trade List for next session
+   → If score improves to ≥ 80 → promote to Active Trade List for next session
    → Re-apply all guardrail checks before promoting
 
 3. LOG ALL DECISIONS
@@ -927,22 +925,22 @@ Total possible score: **108 points** (10 scored parameters).
 ║  • Benchmark Monthly RSI > 60                                    ║
 ║  • Market VIX below threshold                                    ║
 ╠══════════════════════════════════════════════════════════════════╣
-║ WEIGHTED SCORE (out of 108):                                     ║
+║ WEIGHTED SCORE (out of 104):                                     ║
 ║  P2  Sector Strong                    12 pts                     ║
-║  P3  Weekly RSI > 60                  12 pts                     ║
 ║  P4  Weekly RSI > 40                  10 pts                     ║
 ║  P5  Weekly Range Shift / RSI@40       6 pts                     ║
-║  P6  High Green Volume Weekly          8 pts                     ║
-║  P7  Daily at Support / CIP / Gap     12 pts                     ║
-║  P9  Not Near Resistance              14 pts  ← highest          ║
-║  P10 Prev Candle Red + Low Vol        10 pts                     ║
+║  P6  High Green Vol Weekly (5-6 wks)   8 pts                     ║
+║  P7  Daily at Support / CIP / Gap     10 pts                     ║
+║  P8  High Green Vol Daily (6-7 days)   8 pts  ← also gate        ║
+║  P9  Not Near Resistance              12 pts  ← highest          ║
+║  P10 Recent Red Candles Low Vol       10 pts                     ║
 ║  P11 Daily RSI @ 40                   12 pts                     ║
 ║  P12 Bullish RS / Divergence          12 pts                     ║
 ║                                      ─────                       ║
-║  TOTAL                               108 pts                     ║
+║  TOTAL                               100 pts                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║ DECISION:                                                        ║
-║  Score ≥ 86  → ✅ Full position (+ P8 green candle check)       ║
+║  Score ≥ 80  → ✅ Full position (P8 gate must also pass)        ║
 ║  Score 65–85 → ⚠️  Half position / Watchlist                    ║
 ║  Score < 65  → ❌ Skip                                           ║
 ╠══════════════════════════════════════════════════════════════════╣

@@ -1,7 +1,7 @@
-# Watchlist — Stocks Scoring 65–85
+# Watchlist — Stocks Scoring 65–79
 
-> Stocks that qualified on setup but not at full-position threshold (≥86), or that were blocked by a guardrail.
-> Re-scored each pre-market and daily-summary run. Promote to Active Trade List when score reaches ≥86 AND guardrails clear.
+> Stocks that qualified on setup but not at full-position threshold (≥80), or that were blocked by a guardrail.
+> Re-scored each pre-market and daily-summary run. Promote to Active Trade List when score reaches ≥80 AND guardrails clear.
 
 **Last updated:** 2026-06-30 (market-open job)
 

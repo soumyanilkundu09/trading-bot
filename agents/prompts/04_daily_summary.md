@@ -13,7 +13,7 @@
 
 ### 2. Re-score the watchlist for tomorrow
 - For each ticker in `state/watchlist.md`, re-run `python tools/strategy_scorer.py --ticker <SYM> --sector <Sector>`.
-- If any now scores ≥ 86 with no disqualifiers AND weekly budget would allow → mark it "PROMOTE" so tomorrow's pre-market/market-open prioritizes it. Note it in tomorrow context.
+- If any now scores ≥ 80 with no disqualifiers AND weekly budget would allow → mark it "PROMOTE" so tomorrow's pre-market/market-open prioritizes it. Note it in tomorrow context.
 - Drop stale watchlist names whose setup has decayed (score < 65 or disqualified).
 
 ### 3. Compute the day's numbers
