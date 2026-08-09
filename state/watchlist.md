@@ -3,11 +3,16 @@
 > Stocks that qualified on setup but not at full-position threshold (≥80), or that were blocked by a guardrail.
 > Re-scored each pre-market and daily-summary run. Promote to Active Trade List when score reaches ≥80 AND guardrails clear.
 
-**Last updated:** 2026-06-30 (market-open job)
+**Last updated:** 2026-08-09 (pre-market job)
 
 | Ticker | Sector | Score | Last Scored | Reason Not Entered | Key Missing Params |
 |--------|--------|-------|-------------|--------------------|--------------------|
-| TXN | Technology | 98 | 2026-06-30 09:45 | **Avoid chasing** — live price $296.50 is +3.84% above planned entry $285.54 (>3% limit). Setup intact; await pullback toward $285–288 / daily RSI 40 zone. | none (only P10) |
+| _(none)_ | | | | | |
+
+### Recently Dropped
+| Ticker | Sector | Prior Score | New Score | Last Scored | Reason |
+|--------|--------|-------------|-----------|--------------|--------|
+| TXN | Technology | 98 (2026-06-30) | 54 | 2026-08-09 | Fell below 65 threshold — P6, P9, P10, P11 now failing; P10 disqualifier (red candles on high volume). |
 
 ---
 ### Blocked by Guardrail (re-evaluate next window)

@@ -42,12 +42,12 @@ def load_config() -> dict:
 # Parameter weights (Part 9). P1 is a gate (no score).
 # P8 is now a scored parameter (weight 8) AND still enforced as a gate before ordering.
 WEIGHTS = {
-    "P2": 12,   # Sector Strong
-    "P4": 10,   # Weekly RSI > 40
+    "P2": 8,    # Sector Strong
+    "P4": 12,   # Weekly RSI > 40
     "P5": 6,    # Weekly Range Shift / Support @ 40
     "P6": 8,    # High Green Volume Weekly (last 5-6 green weekly candles vs 20-wk avg)
     "P7": 10,   # Daily at Support / CIP / Gap
-    "P8": 8,    # High Green Volume Daily (last 6-7 green daily candles vs 20-day avg)
+    "P8": 6,    # High Green Volume Daily (last 6-7 green daily candles vs 20-day avg)
     "P9": 12,   # Not Near Resistance
     "P10": 10,  # Recent Red Candles Low Volume (last 3-4 red candles vs 20-day avg)
     "P11": 12,  # Daily RSI @ 40
@@ -344,7 +344,7 @@ def score_ticker(symbol: str, sector_name: str | None = None,
 
     disq = check_disqualifiers(a, outlook, cfg)
 
-    # P8 is now a scored parameter — derive the gate flag from the scored result.
+    # P8 is scored only — no hard gate.
     p8_ok = bool(params.get("P8", (False,))[0])
 
     # Decision
@@ -366,12 +366,6 @@ def score_ticker(symbol: str, sector_name: str | None = None,
         if decision in ("ENTER_FULL", "WATCHLIST_HALF")
         else {}
     )
-
-    # P8 gate: if the entry trigger candle isn't green with sustained above-avg green volume,
-    # we cannot enter today — downgrade to watchlist and wait for the trigger candle.
-    # This must run BEFORE the chase gate so that a non-triggering candle is never ordered.
-    if decision == "ENTER_FULL" and not p8_ok:
-        decision = "WATCHLIST_NO_TRIGGER"
 
     # Avoid-chasing gate (only meaningful when a live price is supplied at execution time):
     # if the live price has run > max_chase_pct above the planned (prior-session) entry

@@ -562,22 +562,18 @@ STEP 2: STOCK SCAN & SECTOR CHECK
 
 STEP 3: SCORE THE 10 WEIGHTED PARAMETERS (P1 is a gate only — not scored)
 │
-├── P2:  Sector Strong                            [✓=12 / ✗=0]
-├── P4:  Weekly RSI > 40                          [✓=10 / ✗=0]
+├── P2:  Sector Strong                            [✓= 8 / ✗=0]
+├── P4:  Weekly RSI > 40                          [✓=12 / ✗=0]
 ├── P5:  Weekly Range Shift / Support @ 40        [✓= 6 / ✗=0]
 ├── P6:  High Green Volume Weekly (last 5-6 wks)  [✓= 8 / ✗=0]
 ├── P7:  Daily at Support / CIP / Gap             [✓=10 / ✗=0]
-├── P8:  High Green Volume Daily (last 6-7 days)  [✓= 8 / ✗=0]  ← also hard gate
+├── P8:  High Green Volume Daily (last 6-7 days)  [✓= 6 / ✗=0]
 ├── P9:  Not Near Previous Resistance             [✓=12 / ✗=0]
 ├── P10: Recent Red Candles Low Vol (last 3-4)    [✓=10 / ✗=0]
 ├── P11: Daily RSI @ 40                           [✓=12 / ✗=0]
 └── P12: Bullish Range Shift / Divergence         [✓=12 / ✗=0]
 
-TOTAL SCORE: ___ / 116
-
-STEP 3b: P8 GATE (scored above AND mandatory for execution)
-└── p8_entry_ok = true? (trigger green + last 6-7 green days avg vol > 20d avg)
-    YES → Allow execution   NO → WATCHLIST_NO_TRIGGER (wait for trigger candle)
+TOTAL SCORE: ___ / 96
 
 STEP 4: DECISION
 ├── Score ≥ 80  → ✅ ENTER TRADE — Full position
@@ -775,37 +771,35 @@ All weights are user-defined and reflect the relative importance of each signal 
 
 | Parameter | Weight | Group | Rationale |
 |---|---|---|---|
-| P2: Sector Strong | **12** | Weekly / Macro | Sector tailwind amplifies individual stock moves |
-| P4: Weekly RSI > 40 | **10** | Weekly / Macro | Guards against a completed Bearish Range Shift on weekly |
+| P2: Sector Strong | **8** | Weekly / Macro | Sector tailwind amplifies individual stock moves |
+| P4: Weekly RSI > 40 | **12** | Weekly / Macro | Guards against a completed Bearish Range Shift on weekly |
 | P5: Weekly Range Shift / Support @ 40 | **6** | Weekly / Macro | BRS on weekly = structural bullishness confirmed |
 | P6: High Green Volume Weekly (last 5–6 green weekly candles) | **8** | Weekly / Macro | Sustained institutional accumulation on the weekly — last 5–6 green weeks avg above 20-week avg volume |
 | P7: Daily at Support / CIP / Gap | **10** | Daily / Entry | Entry zone precision — price at the right level |
-| P8: High Green Volume Daily (last 6–7 green daily candles) | **8** | Daily / Entry | Sustained accumulation on the daily — last 6–7 green days avg above 20-day avg volume + green trigger candle |
+| P8: High Green Volume Daily (last 6–7 green daily candles) | **6** | Daily / Entry | Sustained accumulation on the daily — last 6–7 green days avg above 20-day avg volume + green trigger candle |
 | P9: Not Near Resistance | **12** | Daily / Risk | Risk/reward filter — entering near resistance kills R:R |
 | P10: Recent Red Candles on Low Volume (last 3–4) | **10** | Daily / Entry | Adverse Low Move — last 3–4 red candles below 20-day avg volume = weak sellers |
 | P11: Daily RSI @ 40 | **12** | Daily / Entry | GFS Son trigger — the precise inflection point |
 | P12: BRS / Daily Divergence | **12** | Daily / Entry | Momentum exhaustion confirmation — reversal/continuation signal |
-| **Total** | **116** | | |
-
-> **P8 Note:** P8 carries **8 scored points** AND is enforced as a hard execution gate. Even if a stock scores ≥80 on the other parameters, the bot will NOT place an order unless `p8_entry_ok = true` (trigger candle green + last 6–7 green daily candles average above 20-day avg volume). A failed P8 downgrades the decision to `WATCHLIST_NO_TRIGGER` — revisit next session.
+| **Total** | **96** | | |
 
 ---
 
 ### Scoring Thresholds
 
-Total possible score: **108 points** (10 scored parameters).
+Total possible score: **96 points** (10 scored parameters).
 
 | Score | Action | Reasoning |
 |---|---|---|
 | **≥ 80 points** | ✅ **Full position** | ≥ 8 average-weight parameters passing |
-| **65 – 85 points** | ⚠️ **Half position / Watchlist** | Strong setup but not fully confirmed — revisit next session |
+| **65 – 80 points** | ⚠️ **Half position / Watchlist** | Strong setup but not fully confirmed — revisit next session |
 | **< 65 points** | ❌ **Skip** | Setup is not mature enough |
 
 **Partial score quick reference:**
-- All 10 pass → 108 pts (maximum)
-- Best 8 of 10 pass (dropping P5:6 + P6:8) → 94 pts → Full position
-- Best 8 of 10 pass (dropping P5:6 + P4:10) → 92 pts → Full position
-- Weakest 8 of 10 pass (dropping P9:14 + P12:12) → 82 pts → Half position
+- All 10 pass → 96 pts (maximum)
+- Best 8 of 10 pass (dropping P5:6 + P8:6) → 84 pts → Full position
+- Best 8 of 10 pass (dropping P5:6 + P6:8) → 82 pts → Full position
+- Weakest 8 of 10 pass (dropping P4:12 + P9:12) → 72 pts → Half position
 
 ---
 
@@ -925,19 +919,19 @@ Total possible score: **108 points** (10 scored parameters).
 ║  • Benchmark Monthly RSI > 60                                    ║
 ║  • Market VIX below threshold                                    ║
 ╠══════════════════════════════════════════════════════════════════╣
-║ WEIGHTED SCORE (out of 104):                                     ║
-║  P2  Sector Strong                    12 pts                     ║
-║  P4  Weekly RSI > 40                  10 pts                     ║
+║ WEIGHTED SCORE (out of 96):                                      ║
+║  P2  Sector Strong                     8 pts                     ║
+║  P4  Weekly RSI > 40                  12 pts                     ║
 ║  P5  Weekly Range Shift / RSI@40       6 pts                     ║
 ║  P6  High Green Vol Weekly (5-6 wks)   8 pts                     ║
 ║  P7  Daily at Support / CIP / Gap     10 pts                     ║
-║  P8  High Green Vol Daily (6-7 days)   8 pts  ← also gate        ║
+║  P8  High Green Vol Daily (6-7 days)   6 pts                     ║
 ║  P9  Not Near Resistance              12 pts  ← highest          ║
 ║  P10 Recent Red Candles Low Vol       10 pts                     ║
 ║  P11 Daily RSI @ 40                   12 pts                     ║
 ║  P12 Bullish RS / Divergence          12 pts                     ║
 ║                                      ─────                       ║
-║  TOTAL                               100 pts                     ║
+║  TOTAL                                96 pts                     ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║ DECISION:                                                        ║
 ║  Score ≥ 80  → ✅ Full position (P8 gate must also pass)        ║

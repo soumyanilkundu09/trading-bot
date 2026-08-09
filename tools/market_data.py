@@ -189,30 +189,53 @@ def _swing_points(series: pd.Series, lookback: int = 3):
 def detect_range_shift(rsi: pd.Series, lookback: int = 40) -> dict:
     """
     Detect Bullish (BRS) / Bearish (BeRS) Range Shift in recent RSI.
-    BRS: RSI was below 60, broke above 60, now holding >= 40 on pullback.
-    BeRS: RSI was above 40, broke below 40, now capped < 60 on bounce.
+
+    BRS (sequential — Malkan definition):
+      1. RSI made an upward crossover of 60 (vals[i-1] <= 60, vals[i] > 60).
+      2. After that crossover, on the subsequent pullback RSI held >= 38.
+      3. Current RSI >= 40 (still in the bullish range).
+
+    BeRS (sequential):
+      1. RSI made a downward crossover of 40 (vals[i-1] >= 40, vals[i] < 40).
+      2. After that crossover, any bounce was capped below 62.
+      3. Current RSI < 55.
     """
     recent = rsi.dropna().tail(lookback)
     if len(recent) < 10:
         return {"bullish_range_shift": False, "bearish_range_shift": False}
 
     vals = recent.values
-    broke_above_60 = bool((vals > 60).any())
-    broke_below_40 = bool((vals < 40).any())
     current = float(vals[-1])
-    recent_min = float(vals[-10:].min())
-    recent_max = float(vals[-10:].max())
 
-    # Bullish range shift: established >60 break, now using 40 as support
-    brs = broke_above_60 and recent_min >= 38 and current >= 40
-    # Bearish range shift: broke below 40, now resistance at 60
-    bers = broke_below_40 and recent_max <= 62 and current < 60 and current < 50
+    # Find the LAST upward crossover of 60 (from <= 60 to > 60)
+    brs_cross_idx = None
+    for i in range(1, len(vals)):
+        if vals[i] > 60 and vals[i - 1] <= 60:
+            brs_cross_idx = i  # keep updating to capture the most recent crossover
+
+    # Find the LAST downward crossover of 40 (from >= 40 to < 40)
+    bers_cross_idx = None
+    for i in range(1, len(vals)):
+        if vals[i] < 40 and vals[i - 1] >= 40:
+            bers_cross_idx = i
+
+    brs = False
+    if brs_cross_idx is not None:
+        # Check that after breaking above 60, any pullback held >= 38
+        min_after_cross = float(vals[brs_cross_idx:].min())
+        brs = min_after_cross >= 38 and current >= 40
+
+    bers = False
+    if bers_cross_idx is not None:
+        # Check that after breaking below 40, bounces were capped below 62
+        max_after_cross = float(vals[bers_cross_idx:].max())
+        bers = max_after_cross <= 62 and current < 55
 
     return {
         "bullish_range_shift": bool(brs),
         "bearish_range_shift": bool(bers),
-        "broke_above_60": broke_above_60,
-        "broke_below_40": broke_below_40,
+        "broke_above_60": brs_cross_idx is not None,
+        "broke_below_40": bers_cross_idx is not None,
         "current_rsi": round(current, 2),
     }
 

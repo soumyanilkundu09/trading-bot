@@ -75,6 +75,6 @@
   "scoring_thresholds": {
     "full_position_min": 80,
     "watchlist_min": 65,
-    "max_score": 108
+    "max_score": 96
   }
 }
