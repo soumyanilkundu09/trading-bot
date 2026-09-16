@@ -63,28 +63,41 @@ Malkan **rejects** the conventional 70-30 overbought/oversold RSI interpretation
 
 **Key Insight:** In a bullish market, RSI oscillates in the **40–80 range** (uses 40 as support). In a bearish market, RSI oscillates in the **20–60 range** (uses 60 as resistance). This asymmetry is the foundation of the Range Shift concept.
 
+**RSI as a Speedometer:**
+Think of RSI as the market's speedometer (0–100). The zone it occupies tells you *which trading mode to apply* — not whether to blindly buy or sell at extremes.
+
+| RSI Zone | Market State | Suitable Approach | Stop-Loss Style | Exit Style |
+|---|---|---|---|---|
+| **> 60** (Bullish Zone) | Highly trending | Breakout trading; ride the trend | Trailing stop (20 SMA / 3-candle low) | Trend-following: exit only on reversal signal or Range Shift — never a fixed monetary target |
+| **40 – 60** (Neutral/Sideways Zone) | Choppy, range-bound | Support-resistance trading; buy near 40, sell near 60 | Technical stop below the support line | Monetary target (3–5%, or a fixed profit amount); take profits quickly — ranges are narrow |
+| **< 40** (Bearish Zone) | Downtrending | Breakdown / short-selling (outside long-bias strategy) | — | — |
+
+> **Adaptive mindset:** Successful traders act like chameleons — they switch mode as soon as the RSI crosses a key zone boundary. A trend-following approach in a choppy 40–60 zone will bleed slowly; a monetary-target approach in a trending >60 zone will cause premature exits and missed explosive moves.
+
 ---
 
 ### 1.2 Bullish Range Shift (BRS)
 
 **Definition:**
-A Bullish Range Shift (BRS) occurs when the RSI indicator **shifts its operating range from the bearish zone (20–60) into the bullish zone (40–80)**. This signals a fundamental change in trend — from bearish/sideways to bullish.
+A Bullish Range Shift (BRS) occurs when the RSI **stops being bearish** — it crosses above 40 from the bearish zone and begins using 40 as support (printing a higher bottom). This signals the asset is transitioning from bearish/sideways to neutral/bullish, and is the earliest safe point to begin support-resistance buying.
 
 **Qualifying Conditions for a Bullish Range Shift:**
-1. RSI was previously oscillating below 60 (bearish/sideways range).
-2. RSI **breaks above 60** decisively.
-3. On a subsequent pullback, RSI now finds **support near the 40 level** (rather than breaking below it).
+1. RSI was previously oscillating below 40 (bearish zone).
+2. RSI **crosses above 40** decisively — the market stops being bearish.
+3. On a subsequent pullback, RSI now finds **support at the 40 level** (holds above ~38, printing a higher bottom).
 4. Price makes a higher low while RSI holds above 40.
-5. A **bullish candle** (green, ideally with good body) is formed at or near the RSI 40 support zone.
+5. A **bullish candle** (green, ideally with good body) confirms at the RSI 40 support zone.
+
+**Advanced confirmation:** If RSI subsequently breaks above 60 and on later pullbacks continues to hold 40 as support, the BRS is fully confirmed — the asset has entered the RSI 40–80 bullish oscillation band.
 
 **What Does NOT Qualify:**
-- RSI briefly touching 60 and falling back below — this is a failed range shift, not a BRS.
-- RSI at 40 without a prior confirmed break above 60 on higher timeframes.
-- A red/bearish candle forming at RSI 40 level (signals continued weakness).
+- RSI briefly touching 40 from above and continuing lower — this is a bounce, not a BRS.
+- RSI still below 40 on any higher timeframe — the bullish shift must be aligned across timeframes.
+- A red/bearish candle forming at RSI 40 level (signals continued weakness, not reversal).
 
 **Signal Strength:**
-- Weak BRS: RSI breaks 60 and holds 40 once.
-- Strong BRS: RSI breaks 60, pulls back to 40, bounces, and breaks 60 again (confirmation).
+- Initial BRS: RSI crosses above 40 and holds 40 on first test.
+- Confirmed BRS: RSI breaks above 60 and on a subsequent pullback holds 40 again (full range shift).
 
 **Entry Logic:**
 - Monthly RSI > 60 + Weekly RSI > 60 = trend confirmed bullish on higher timeframes.
@@ -98,19 +111,21 @@ A Bullish Range Shift (BRS) occurs when the RSI indicator **shifts its operating
 ### 1.3 Bearish Range Shift (BeRS)
 
 **Definition:**
-A Bearish Range Shift (BeRS) occurs when the RSI **shifts its operating range from the bullish zone (40–80) into the bearish zone (20–60)**. This signals a change from bullish/sideways to bearish.
+A Bearish Range Shift (BeRS) occurs when the RSI **stops being bullish** — it crosses below 60 from the bullish zone and begins using 60 as resistance (printing a lower top). This signals the asset is transitioning from bullish to neutral/bearish, and is the earliest warning to stop adding long positions.
 
 **Qualifying Conditions for a Bearish Range Shift:**
-1. RSI was previously oscillating above 40 (bullish range).
-2. RSI **breaks below 40** decisively.
-3. On a subsequent bounce, RSI now finds **resistance near the 60 level** (cannot cross back above 60).
+1. RSI was previously oscillating above 60 (bullish zone).
+2. RSI **crosses below 60** — upward momentum has failed and the market stops being bullish.
+3. On a subsequent bounce, RSI now finds **resistance at the 60 level** (stays capped at/below ~62, printing a lower top).
 4. Price makes a lower high while RSI stays below 60.
-5. A **bearish candle** (red, ideally with good body) is formed at or near the RSI 60 resistance zone.
+5. A **bearish candle** (red, ideally with good body) confirms at or near the RSI 60 resistance zone.
+
+**Advanced confirmation:** If RSI subsequently breaks below 40 and bounces cannot reclaim 60, the BeRS is fully confirmed — the asset has entered the RSI 20–60 bearish oscillation band.
 
 **What Does NOT Qualify:**
-- RSI briefly dipping below 40 and recovering — this is a false range shift.
-- RSI at 60 resistance without a prior break below 40.
-- A green/bullish candle forming at RSI 60 level during what appears to be a bounce.
+- RSI briefly dipping below 60 and immediately recovering above — this is a shallow pullback, not a BeRS.
+- RSI bouncing at 60 and breaking back above — the resistance must hold (cap below ~62).
+- A green/bullish candle forming at RSI 60 level with strength — that signals the bullish zone was reclaimed.
 
 **For the Long Bias Strategy:**
 A Bearish Range Shift on any timeframe (Monthly/Weekly/Daily) is a **disqualifier** for long trades. If a BeRS is detected on the Weekly or Monthly, the trade setup should be **rejected entirely**.
@@ -228,6 +243,57 @@ CIP refers to a zone where price **consolidates tightly** (narrow range, low vol
 - Price retraces to a CIP zone on the daily chart.
 - RSI is near 40 at this point.
 - A bullish candle forms at CIP with rising or above-average volume = entry signal.
+
+---
+
+### 1.9 Trading Process per Market Zone
+
+The RSI zone not only tells you the market's state — it prescribes the *exact process* to follow. Applying the wrong process in the wrong zone is the most common trader error.
+
+#### Zone 1: Choppy / Range-Bound Market (RSI 40–60)
+
+| Step | Rule |
+|---|---|
+| **Entry** | Enter systematically at defined support levels — specifically when RSI tests and bounces from the 40 level |
+| **Stop-Loss** | Technical stop below the key support line; must be structural (below the swing low), **never** arbitrary or monetary |
+| **Exit** | Use **monetary targets** — a fixed percentage (3–5%) or a fixed profit amount; do NOT wait for a breakout |
+| **Why** | Ranges are narrow; holding onto a trade anticipating a breakout in a choppy market consistently results in losing your paper profits |
+
+#### Zone 2: Trending Market (RSI > 60 bullish or < 40 bearish)
+
+| Step | Rule |
+|---|---|
+| **Entry** | Enter on a confirmed breakout (RSI crossing outside the 40–60 boundary) with price action confirmation |
+| **Stop-Loss** | **Trailing stop** — 20-period SMA or a three-candle low; trail it up with the trend, never bring it back down |
+| **Exit** | Use a **trend-following exit only** — exit when the trailing stop is hit, a Range Shift appears, or a reversal signal triggers; **never exit using a fixed monetary target** |
+| **Why** | Trending markets produce explosive, multi-week moves; exiting at a 3–5% target in a trend cuts off 20–30% gains |
+
+> **Critical rule for the AI agent:** When the daily RSI is above 60 in an open position, the bot must NOT exit at a fixed dollar/percentage target — it must trail the stop. When the daily RSI is in the 40–60 zone at entry, use the monetary target and close before expecting a breakout that may never come.
+
+---
+
+### 1.10 Trading Philosophy and Adaptive Mindset
+
+These principles govern how to evaluate every trade and adapt to changing market conditions.
+
+**Losing Trades vs. Bad Trades**
+
+| | Losing Trade | Bad Trade |
+|---|---|---|
+| **Definition** | Followed every rule; market hit the stop-loss | Broke a system rule — wrong stock, no setup, entered on impulse |
+| **Outcome** | Can still be profitable over time | Unhealthy even if it accidentally made money |
+| **Judge by** | Process, not P&L | Process, not P&L |
+
+> A losing trade is a healthy, expected part of the process. A bad trade — even one that happened to profit — is evidence of a broken system. The AI agent must judge every trade by whether it followed rules, not by whether it made money.
+
+**Survival of the Most Adaptive**
+
+Markets constantly cycle between trending phases (RSI > 60 or < 40) and choppy/sideways phases (RSI 40–60). The strategies that work in one zone actively fail in the other:
+
+- **Trend-following in a choppy zone** → slow bleed, many small losses.
+- **Range-trading in a trending zone** → premature exits, massive missed moves.
+
+The defining skill is *noticing the zone transition* — a RSI Range Shift — and switching mode immediately. The bot must re-evaluate its open-position management rules every session based on the current RSI zone, not the zone at the time of entry.
 
 ---
 

@@ -190,15 +190,17 @@ def detect_range_shift(rsi: pd.Series, lookback: int = 40) -> dict:
     """
     Detect Bullish (BRS) / Bearish (BeRS) Range Shift in recent RSI.
 
-    BRS (sequential — Malkan definition):
-      1. RSI made an upward crossover of 60 (vals[i-1] <= 60, vals[i] > 60).
-      2. After that crossover, on the subsequent pullback RSI held >= 38.
-      3. Current RSI >= 40 (still in the bullish range).
+    BRS (Malkan definition):
+      RSI transitions from bearish zone (below 40) into neutral/bullish zone:
+      1. RSI made an upward crossover of 40 (vals[i-1] < 40, vals[i] >= 40).
+      2. After that crossover, RSI held >= 38 (40 acting as support, higher bottom).
+      3. Current RSI >= 40 (still in neutral/bullish zone).
 
-    BeRS (sequential):
-      1. RSI made a downward crossover of 40 (vals[i-1] >= 40, vals[i] < 40).
-      2. After that crossover, any bounce was capped below 62.
-      3. Current RSI < 55.
+    BeRS (Malkan definition):
+      RSI transitions from bullish zone (above 60) into neutral/bearish zone:
+      1. RSI made a downward crossover of 60 (vals[i-1] > 60, vals[i] <= 60).
+      2. After that crossover, any bounce was capped <= 62 (60 acting as resistance, lower top).
+      3. Current RSI < 60.
     """
     recent = rsi.dropna().tail(lookback)
     if len(recent) < 10:
@@ -207,35 +209,35 @@ def detect_range_shift(rsi: pd.Series, lookback: int = 40) -> dict:
     vals = recent.values
     current = float(vals[-1])
 
-    # Find the LAST upward crossover of 60 (from <= 60 to > 60)
+    # Find the LAST upward crossover of 40 (RSI leaving bearish zone, entering neutral/bullish)
     brs_cross_idx = None
     for i in range(1, len(vals)):
-        if vals[i] > 60 and vals[i - 1] <= 60:
-            brs_cross_idx = i  # keep updating to capture the most recent crossover
+        if vals[i] >= 40 and vals[i - 1] < 40:
+            brs_cross_idx = i
 
-    # Find the LAST downward crossover of 40 (from >= 40 to < 40)
+    # Find the LAST downward crossover of 60 (RSI leaving bullish zone, entering neutral/bearish)
     bers_cross_idx = None
     for i in range(1, len(vals)):
-        if vals[i] < 40 and vals[i - 1] >= 40:
+        if vals[i] <= 60 and vals[i - 1] > 60:
             bers_cross_idx = i
 
     brs = False
     if brs_cross_idx is not None:
-        # Check that after breaking above 60, any pullback held >= 38
+        # 40 is acting as support: any pullback held above 38
         min_after_cross = float(vals[brs_cross_idx:].min())
         brs = min_after_cross >= 38 and current >= 40
 
     bers = False
     if bers_cross_idx is not None:
-        # Check that after breaking below 40, bounces were capped below 62
+        # 60 is acting as resistance: bounces capped at/below 62
         max_after_cross = float(vals[bers_cross_idx:].max())
-        bers = max_after_cross <= 62 and current < 55
+        bers = max_after_cross <= 62 and current < 60
 
     return {
         "bullish_range_shift": bool(brs),
         "bearish_range_shift": bool(bers),
-        "broke_above_60": brs_cross_idx is not None,
-        "broke_below_40": bers_cross_idx is not None,
+        "broke_above_40": brs_cross_idx is not None,
+        "broke_below_60": bers_cross_idx is not None,
         "current_rsi": round(current, 2),
     }
 

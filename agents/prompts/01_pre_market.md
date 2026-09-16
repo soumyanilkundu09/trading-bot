@@ -19,32 +19,44 @@ Then determine outlook: **POSITIVE / NEGATIVE / INDECISIVE**.
 - Note any FOMC/Fed meeting within 3 days, or major macro events. If a Fed decision is imminent, flag caution in the research log (informs market-open job).
 
 ### 3. Scan the universe (only if gate POSITIVE)
-For each ticker in `config/universe.json`, run the scorer. Practical approach:
-- Score candidates with: `python tools/strategy_scorer.py --ticker <SYM> --sector <SectorName>`
-- The scorer pre-filters via the analysis; collect results where `gate_passed` is true and `decision` in (`ENTER_FULL`, `WATCHLIST_HALF`).
-- To keep runtime/cost reasonable, you may pre-screen with `--test` (analyze_ticker) and only fully score names whose Monthly RSI > 60, Weekly RSI > 60, and Daily RSI in 35–48.
-- Batch them; capture each result's score, decision, passed/failed params, disqualifiers, and trade_plan.
+Run the two-tier RSI scanner — it covers S&P 500 (~503 tickers) plus `config/universe.json`:
+
+```
+python tools/rsi_scan.py
+```
+
+The scanner applies **three conditions only** per Malkan's RSI Speedometer:
+
+| Tier | Monthly RSI | Weekly RSI | Daily RSI or BRS |
+|------|-------------|------------|-----------------|
+| **EXTREMELY BULLISH** | > 60 | > 60 and ≤ 65 | Daily RSI 39–45 **or** daily Bullish Range Shift |
+| **BULLISH** | > 60 | > 40 and < 60 | Daily RSI 39–45 **or** daily Bullish Range Shift |
+
+Output is JSON with `EXTREMELY_BULLISH` and `BULLISH` arrays, each sorted by weekly RSI descending.
+Capture `symbol`, `monthly_rsi`, `weekly_rsi`, `daily_rsi`, `daily_brs`, and `price` for each hit.
+
+If the scanner returns `gate_passed: false`, treat the same as Step 1 gate failure — write research log, notify Telegram, commit, STOP.
 
 ### 4. Rank and classify
-- **Active Trade List** (score ≥ 80, no disqualifiers): eligible for execution at market-open.
-- **Watchlist** (65–79): revisit; update `state/watchlist.md`.
-- **Skip** (< 65 or disqualified): note briefly.
+- **Active Trade List** (`EXTREMELY_BULLISH` tier): eligible for execution at market-open.
+- **Watchlist** (`BULLISH` tier): revisit; update `state/watchlist.md`.
+- Everything else is skipped.
 
 ### 5. Write the research log
 Create `state/research/YYYY-MM-DD_premarket.md` with:
 - Global outlook + macro snapshot (the numbers).
 - Event-risk flags.
-- Active Trade List table: ticker, sector, score, entry/SL/T1/T2, position size, key thesis, which params passed/failed.
-- Watchlist table.
-- Anything market-open should know (e.g., "AAPL only enters if P8 confirms green+volume at open").
+- **Extremely Bullish table** (Monthly RSI>60, Weekly RSI 60-65, Daily 39-45 or BRS): ticker, price, M-RSI, W-RSI, D-RSI, BRS flag.
+- **Bullish table** (Monthly RSI>60, Weekly RSI 40-60, Daily 39-45 or BRS): same columns.
+- Anything market-open should know (e.g., "AAPL daily BRS confirmed — prioritise at open").
 
 ### 6. Close out
 - Update `state/watchlist.md`.
 - Commit + push.
-- **Telegram:** `📋 Pre-market <date>: Outlook <POSITIVE/…>. Scanned N. Active: X [tickers]. Watch: Y. Top: <ticker> (<score>).`
+- **Telegram:** `📋 Pre-market <date>: Outlook POSITIVE. Scanned N. Extremely Bullish: X [tickers]. Bullish: Y [tickers].`
   If gate failed: `📋 Pre-market <date>: Global gate FAILED (<reason>). No trades today.`
 
 ## Guardrails specific to this job
 - This job NEVER places orders. Research only.
-- Do not "force a thesis" — if the whole sector (sector ETF weekly RSI < 60) is rolling over, drop its candidates even if an individual name looks ok.
+- Do not "force a thesis" — the RSI tiers are the entry filter; do not add stocks that nearly-but-don't-quite pass.
 - Respect remaining weekly budget when sizing the Active list (if `weekly_trade_count` already 3, note that all picks are watchlist-only).

@@ -40,7 +40,7 @@ def load_config() -> dict:
 
 
 # Parameter weights (Part 9). P1 is a gate (no score).
-# P8 is now a scored parameter (weight 8) AND still enforced as a gate before ordering.
+# P8 is a scored parameter only (weight 6); no execution gate.
 WEIGHTS = {
     "P2": 8,    # Sector Strong
     "P4": 12,   # Weekly RSI > 40
@@ -53,7 +53,7 @@ WEIGHTS = {
     "P11": 12,  # Daily RSI @ 40
     "P12": 12,  # Bullish Range Shift / Divergence
 }
-MAX_SCORE = sum(WEIGHTS.values())  # 116
+MAX_SCORE = sum(WEIGHTS.values())  # 96
 
 
 # --------------------------------------------------------------------------
