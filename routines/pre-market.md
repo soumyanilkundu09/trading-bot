@@ -89,8 +89,44 @@ Update the **Watchlist** section of `memory/TRADE-LOG.md` with:
 ### 8. Close out
 - **Commit:** `git add -A && git commit -m "run: pre-market YYYY-MM-DD"` — always commit (even gate failure).
 - **Push.**
-- **Telegram (only if urgent, else skip):** `📋 Pre-market YYYY-MM-DD: Gate POSITIVE. Scanned N. EB Pullback: X. EB Momentum: Y. Bullish: Z [tickers entering Monday]. Watchlist: W tickers.`
-  If gate failed: `📋 Pre-market YYYY-MM-DD: Global gate FAILED (<reason>). No trades today.`
+- **Telegram:** Always send one notification after push. Format:
+
+**If gate POSITIVE and tickers found:**
+```
+📋 Pre-market YYYY-MM-DD — Gate: ✅ POSITIVE
+SPX M/W RSI: XX.X / XX.X | VIX: XX.X
+
+Ticker | Tier         | Score | Decision
+-------|--------------|-------|----------
+LLY    | BULLISH      |  6/10 | ENTER ✅
+SCHW   | BULLISH      |  4/10 | WATCH
+MA     | BULLISH      |  3/10 | WATCH
+DDOG   | BULLISH      |  3/10 | WATCH
+ASML   | EB PULLBACK  |  2/10 | BELOW THRESHOLD
+
+Scanned: N | Entering: X | Watching: Y
+```
+Sort all tickers by score descending. "ENTER ✅" if score ≥ 6, "WATCH" if below threshold, "BELOW THRESHOLD" if dropped from watchlist. Include tier column so reader knows the setup type at a glance.
+
+**If gate POSITIVE but no tickers:**
+```
+📋 Pre-market YYYY-MM-DD — Gate: ✅ POSITIVE
+SPX M/W RSI: XX.X / XX.X | VIX: XX.X
+
+No setups today. Scanned: N | Watchlist: W tickers (none scored ≥ 6).
+```
+
+**If gate FAILED:**
+```
+📋 Pre-market YYYY-MM-DD — Gate: ❌ FAILED
+Reason: <e.g. SPX M-RSI 58.2 < 60 / VIX 28.1 > 25>
+No scanning. No trades today.
+```
+
+**Urgent add-on** (append to any of the above if urgent conditions are met — held position below -7%, thesis broke overnight, major geopolitical event):
+```
+⚠️ URGENT: <one-line description of the urgent condition>
+```
 
 ## Guardrails specific to this routine
 - This routine NEVER places orders. Research only.
