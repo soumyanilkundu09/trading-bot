@@ -9,8 +9,16 @@
 
 ### 1. Compute weekly stats from `state/trade_log.md`
 - Trades opened this week, trades closed this week.
-- Win rate, average R-multiple, total realized P&L ($ and %).
+- Overall: win rate, average R-multiple, total realized P&L ($ and %).
 - Best / worst trade, best / worst sector.
+- **Tier breakdown** (read `Tier` column from each trade row):
+
+  | Tier | Entries | Wins | Win Rate | Avg R |
+  |------|---------|------|----------|-------|
+  | EB Pullback | | | | |
+  | EB Momentum | | | | |
+  | Bullish | | | | |
+
 - Adherence: did any run violate a guardrail? (over weekly budget, position cap, sized wrong, skipped a mandatory exit?)
 
 ### 2. Grade the week (A–D)
@@ -21,21 +29,23 @@ Grade on **process adherence first, returns second** (Malkan: patience > activit
 - **D:** A hard rule was violated (over budget, missed a mandatory RSI<40 exit, oversized).
 
 ### 3. Sector review
-- Review the sector loss tracker. Any sector paused after 2 consecutive losses → decide whether to re-enable for next week (only if the sector ETF has regained weekly RSI > 60).
-- Note sectors with momentum to favor next week.
+- Review the sector loss tracker. Any sector paused after 2 consecutive losses → decide whether to re-enable for next week.
+  - Re-enable only if the sector ETF has regained **both** weekly RSI > 60 **AND** monthly RSI > 60 (consistent with the global gate).
+- Note sectors with momentum to favor next week (ETF in EB Pullback or EB Momentum tier).
 
 ### 4. Reset the weekly budget
 - In `state/weekly_tracker.md`: set `weekly_trade_count` to 0, set next week's Monday date, clear the entries table. Keep the sector loss tracker (it persists across weeks until reset by a win or manual re-enable).
 
 ### 5. Strategy reflection (propose only — never auto-edit the strategy file)
-- If a recurring pattern caused losses (e.g., entering too close to resistance, P9 failures), write a concrete suggestion to the weekly log. Do NOT modify `strategy/Malkan_Trading_Strategy.md` — surface the proposal to the human for approval.
+- If a recurring pattern caused losses (e.g., entering too close to resistance P9 failing, momentum stops too tight), write a concrete suggestion to the weekly log. Do NOT modify `strategy/Malkan_Trading_Strategy.md` — surface the proposal to the human for approval.
+- **Tier-specific reflection:** Did Momentum positions (3-bar trailing stop, no fixed T1) outperform Pullback/Bullish positions (fixed T1, partial exit at resistance)? Any pattern worth adjusting?
 
 ### 6. Write the weekly log
-Create `logs/YYYY-MM-DD_weekly_review.md` with all stats, grade, sector notes, and any proposals.
+Create `logs/YYYY-MM-DD_weekly_review.md` with all stats, tier breakdown table, grade, sector notes, and any proposals.
 
 ### 7. Close out
 - Commit + push.
-- **Telegram:** use `telegram_notify.weekly_report(text)` with: grade, # trades, win rate, weekly P&L, sector notes, budget reset confirmation, any proposal headline.
+- **Telegram:** use `telegram_notify.weekly_report(text)` with: grade, # trades (by tier), win rate, weekly P&L, sector notes, budget reset confirmation, any proposal headline.
 
 ## Guardrails specific to this job
 - Never auto-modifies the strategy document. Proposals go to the human.

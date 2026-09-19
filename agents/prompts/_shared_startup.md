@@ -5,6 +5,8 @@ All state lives in Git. Execute this startup sequence at the top of EVERY job be
 
 ## Mandatory Startup (Guardrail 8D — do not skip, do not reorder)
 
+0. **Sync state from Git.** Run `git pull --ff-only` to pull any commits made by other runs (e.g. midday scan was on a different machine). If pull fails due to merge conflict → HALT, send Telegram alert "git pull failed — halting", exit. Never proceed on stale state.
+
 1. **Read the strategy.** Read `strategy/Malkan_Trading_Strategy.md` in full. If missing/unreadable → HALT, send Telegram alert "Strategy file not found — halting", exit. Do NOT fall back to assumptions.
 2. **Load config.** Read `config/market_config.json`, `config/trading_config.json`, `config/universe.json`.
 3. **Confirm trading mode (8A).** Read `trading_config.json` → `trading_mode`.

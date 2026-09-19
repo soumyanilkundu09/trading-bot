@@ -27,18 +27,20 @@ python tools/rsi_scan.py
 
 The scanner applies **three conditions only** per Malkan's RSI Speedometer:
 
-| Tier | Monthly RSI | Weekly RSI | Daily RSI or BRS |
-|------|-------------|------------|-----------------|
-| **EXTREMELY BULLISH** | > 60 | > 60 and ≤ 65 | Daily RSI 39–45 **or** daily Bullish Range Shift |
-| **BULLISH** | > 60 | > 40 and < 60 | Daily RSI 39–45 **or** daily Bullish Range Shift |
+| Tier | Monthly RSI | Weekly RSI | Daily RSI | BRS |
+|------|-------------|------------|-----------|-----|
+| **EXTREMELY BULLISH PULLBACK** | > 60 | > 60 and ≤ 65 | 39–45 | or daily BRS |
+| **EXTREMELY BULLISH MOMENTUM** | > 60 | > 60 (no cap) | 59–65 | — |
+| **BULLISH** | > 60 | > 40 and < 60 | 39–45 | or daily BRS |
 
-Output is JSON with `EXTREMELY_BULLISH` and `BULLISH` arrays, each sorted by weekly RSI descending.
+Output is JSON with `EXTREMELY_BULLISH_PULLBACK`, `EXTREMELY_BULLISH_MOMENTUM`, and `BULLISH` arrays, each sorted by weekly RSI descending.
 Capture `symbol`, `monthly_rsi`, `weekly_rsi`, `daily_rsi`, `daily_brs`, and `price` for each hit.
 
 If the scanner returns `gate_passed: false`, treat the same as Step 1 gate failure — write research log, notify Telegram, commit, STOP.
 
 ### 4. Rank and classify
-- **Active Trade List** (`EXTREMELY_BULLISH` tier): eligible for execution at market-open.
+- **Active Trade List — Pullback** (`EXTREMELY_BULLISH_PULLBACK` tier): pullback entry; daily RSI near 40 zone or BRS confirmed.
+- **Active Trade List — Momentum** (`EXTREMELY_BULLISH_MOMENTUM` tier): momentum continuation; daily RSI 59–65, weekly uncapped.
 - **Watchlist** (`BULLISH` tier): revisit; update `state/watchlist.md`.
 - Everything else is skipped.
 
@@ -46,14 +48,15 @@ If the scanner returns `gate_passed: false`, treat the same as Step 1 gate failu
 Create `state/research/YYYY-MM-DD_premarket.md` with:
 - Global outlook + macro snapshot (the numbers).
 - Event-risk flags.
-- **Extremely Bullish table** (Monthly RSI>60, Weekly RSI 60-65, Daily 39-45 or BRS): ticker, price, M-RSI, W-RSI, D-RSI, BRS flag.
-- **Bullish table** (Monthly RSI>60, Weekly RSI 40-60, Daily 39-45 or BRS): same columns.
+- **Extremely Bullish Pullback table** (Monthly>60, Weekly 60-65, Daily 39-45 or BRS): ticker, price, M-RSI, W-RSI, D-RSI, BRS flag.
+- **Extremely Bullish Momentum table** (Monthly>60, Weekly >60, Daily 59-65): ticker, price, M-RSI, W-RSI, D-RSI.
+- **Bullish table** (Monthly>60, Weekly 40-60, Daily 39-45 or BRS): ticker, price, M-RSI, W-RSI, D-RSI, BRS flag.
 - Anything market-open should know (e.g., "AAPL daily BRS confirmed — prioritise at open").
 
 ### 6. Close out
 - Update `state/watchlist.md`.
 - Commit + push.
-- **Telegram:** `📋 Pre-market <date>: Outlook POSITIVE. Scanned N. Extremely Bullish: X [tickers]. Bullish: Y [tickers].`
+- **Telegram:** `📋 Pre-market <date>: Outlook POSITIVE. Scanned N. EB Pullback: X [tickers]. EB Momentum: Y [tickers]. Bullish: Z [tickers].`
   If gate failed: `📋 Pre-market <date>: Global gate FAILED (<reason>). No trades today.`
 
 ## Guardrails specific to this job

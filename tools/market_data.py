@@ -333,6 +333,94 @@ def find_gaps(df: pd.DataFrame, lookback: int = 60) -> list:
     return gaps
 
 
+def get_market_gap_down_dates(lookback_candles: int = 7) -> set:
+    """
+    Fetch SPY daily bars and return a set of date strings (YYYY-MM-DD) on which
+    SPY itself opened below the prior session's close (market-wide gap down).
+    Used to exclude systemic gaps from the stock-specific gap-down filter.
+    Returns an empty set on any data failure.
+    """
+    try:
+        spy = fetch_daily_bars("SPY")
+        if spy is None or len(spy) < 3:
+            return set()
+        tail = spy.tail(lookback_candles + 1)
+        market_gap_days = set()
+        for i in range(1, len(tail)):
+            if float(tail["open"].iloc[i]) < float(tail["close"].iloc[i - 1]):
+                market_gap_days.add(str(tail.index[i].date()))
+        return market_gap_days
+    except Exception:
+        return set()
+
+
+def check_entry_filters(df: pd.DataFrame, market_gap_dates: set | None = None) -> dict:
+    """
+    Two pre-entry filters for BULLISH and EB Pullback tiers (NOT applied to EB Momentum).
+
+    near_resistance:
+      True if current price is within 5% of either:
+        (a) the highest daily HIGH in the last 30 trading days, or
+        (b) the 52-week high (highest daily HIGH in last 252 trading days).
+      Per Malkan P9: large-cap setups require ≥6-8% upside to nearest resistance.
+      Using 5% as the disqualification threshold.
+
+    has_gap_down_5d:
+      True if ANY of the last 5 completed daily candles had a STOCK-SPECIFIC gap
+      down (opened below the prior close) on a day when SPY did NOT also gap down.
+      Market-wide gaps (same date in market_gap_dates) are excluded.
+    """
+    if len(df) < 10:
+        return {"near_resistance": False, "has_gap_down_5d": False}
+
+    if market_gap_dates is None:
+        market_gap_dates = set()
+
+    current_price = float(df["close"].iloc[-1])
+
+    # --- Resistance check (use HIGH column for resistance levels) ---
+    # Exclude the very last bar (could be today's incomplete candle)
+    hist = df.iloc[:-1] if len(df) > 1 else df
+
+    swing_high_30d = float(hist.tail(30)["high"].max()) if len(hist) >= 5 else current_price
+    high_52w = float(hist.tail(252)["high"].max()) if len(hist) >= 50 else current_price
+
+    # Only consider levels that are actually above current price
+    candidates = [r for r in [swing_high_30d, high_52w] if r > current_price]
+    nearest_resistance = min(candidates) if candidates else None
+
+    near_resistance = False
+    dist_pct = None
+    if nearest_resistance is not None:
+        dist_pct = round((nearest_resistance - current_price) / current_price * 100, 2)
+        near_resistance = dist_pct < 5.0
+
+    # --- Stock-specific gap-down check: last 5 completed candles ---
+    # Take 6 rows so we can form 5 open-vs-prior-close comparisons.
+    # Skip any date that is also a market-wide gap day (SPY gapped too).
+    tail6 = df.tail(6)
+    has_gap_down = False
+    gap_down_dates = []
+    for i in range(1, len(tail6)):
+        date_str = str(tail6.index[i].date())
+        if date_str in market_gap_dates:
+            continue  # market-wide event — not stock-specific
+        candle_open = float(tail6["open"].iloc[i])
+        prev_close = float(tail6["close"].iloc[i - 1])
+        gap_pct = (prev_close - candle_open) / prev_close * 100
+        if gap_pct > 2.0:
+            has_gap_down = True
+            gap_down_dates.append(f"{date_str} ({gap_pct:.1f}%)")
+
+    return {
+        "near_resistance": near_resistance,
+        "nearest_resistance": round(nearest_resistance, 2) if nearest_resistance else None,
+        "dist_to_resistance_pct": dist_pct,
+        "has_gap_down_5d": has_gap_down,
+        "gap_down_dates": gap_down_dates,
+    }
+
+
 def detect_cip(df: pd.DataFrame, window: int = 10) -> dict:
     """Detect consolidation (CIP) — recent low-volatility tight range."""
     recent = df.tail(window)
@@ -413,10 +501,11 @@ class TickerAnalysis:
     cip: dict = field(default_factory=dict)
     volume: dict = field(default_factory=dict)
     weekly_volume: dict = field(default_factory=dict)
+    entry_filter: dict = field(default_factory=dict)
     error: str = ""
 
 
-def analyze_ticker(symbol: str) -> TickerAnalysis:
+def analyze_ticker(symbol: str, market_gap_dates: set | None = None) -> TickerAnalysis:
     df = fetch_daily_bars(symbol)
     if df is None or len(df) < 60:
         return TickerAnalysis(symbol=symbol, ok=False, error="insufficient data")
@@ -451,6 +540,7 @@ def analyze_ticker(symbol: str) -> TickerAnalysis:
         cip=detect_cip(daily),
         volume=volume_analysis(daily),
         weekly_volume=volume_analysis(weekly, avg_window=20, green_lookback=6, red_lookback=4),
+        entry_filter=check_entry_filters(daily, market_gap_dates=market_gap_dates),
     )
 
 

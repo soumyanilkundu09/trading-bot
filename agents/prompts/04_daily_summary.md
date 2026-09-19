@@ -9,12 +9,32 @@
 ### 1. EOD portfolio snapshot
 - `python tools/alpaca_client.py --account` → equity, day change.
 - `python tools/alpaca_client.py --positions` → final unrealized P&L per position.
-- Reconcile `state/portfolio.md` with Alpaca (catch any stop/target fills during the afternoon → move closed ones to `state/trade_log.md`).
+- Reconcile `state/portfolio.md` with Alpaca (catch any stop/target fills during the afternoon → move closed ones to `state/trade_log.md`). Preserve the `Tier` column when updating rows.
 
 ### 2. Re-score the watchlist for tomorrow
-- For each ticker in `state/watchlist.md`, re-run `python tools/strategy_scorer.py --ticker <SYM> --sector <Sector>`.
-- If any now scores ≥ 80 with no disqualifiers AND weekly budget would allow → mark it "PROMOTE" so tomorrow's pre-market/market-open prioritizes it. Note it in tomorrow context.
-- Drop stale watchlist names whose setup has decayed (score < 65 or disqualified).
+
+For each ticker in `state/watchlist.md`:
+
+**Step A — Re-classify tier:**
+Run `classify_ticker(symbol)` (importable from `tools/rsi_scan.py`), or equivalently:
+```
+python tools/rsi_scan.py --no-sp500
+```
+and look up the ticker's current tier in the output.
+
+**Step B — If tier is non-NONE, score it:**
+```
+python tools/strategy_scorer.py --ticker <SYM> --sector <Sector> --tier <TIER>
+```
+
+**Promotion / drop logic:**
+- Tier ≠ NONE **AND** score ≥ 6 → mark "PROMOTE" for tomorrow's Active Trade List; note the tier. This stock should be prioritised at market-open.
+- Tier ≠ NONE **AND** score ≤ 6 → keep on watchlist; update the `Tier` and last-scored date columns.
+- Tier = NONE → drop from watchlist (setup decayed — remove the row).
+
+Record the current tier in the watchlist entry so market-open tomorrow can apply the correct gauntlet path (scorer is called with the right `--tier` flag).
+
+If any promoted stock would cause `weekly_trade_count` to reach 3 → note it as "watchlist-only until Monday" instead.
 
 ### 3. Compute the day's numbers
 - Realized P&L today (from any closes), unrealized P&L, portfolio value vs prior day.
@@ -23,8 +43,8 @@
 ### 4. Write the daily log
 Create `logs/YYYY-MM-DD_1615_daily.md`:
 - Equity, day change %, realized + unrealized P&L.
-- Per-position table with P&L%.
-- Watchlist changes / promotions.
+- Per-position table with P&L% and Tier.
+- Watchlist changes: promotions (with tier), drops (with reason), kept entries.
 - Any anomalies (failed orders, data gaps).
 
 ### 5. Close out
@@ -35,3 +55,4 @@ Create `logs/YYYY-MM-DD_1615_daily.md`:
 ## Guardrails specific to this job
 - No new entries. Reporting + watchlist maintenance only.
 - This job is the daily reconciliation backstop — ensure `portfolio.md` exactly matches Alpaca before committing.
+- Never use `strategy_scorer.py` alone to re-score watchlist tickers — always classify tier first with `classify_ticker` / `rsi_scan.py`. A Momentum stock scored without `--tier EXTREMELY_BULLISH_MOMENTUM` will have P7 evaluated incorrectly.
