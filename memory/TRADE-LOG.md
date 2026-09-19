@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-19 (pre-market run)
+# Trade Log — Last Updated: 2026-09-19 14:40 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -24,8 +24,7 @@
 |--------|--------|------|-------|-----|-------------|--------------|-------|
 | SCHW | Financials | BULLISH | 4/10 | 10 | 2026-09-19 | P2 (Fin W-RSI 54.54 < 60), P9 (1.01% to res) | Closest Financials pick; need sector ETF recovery |
 | MA | Financials | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Fin W-RSI 54.54), P8 (green vol 0.95x), P9 (1.98% to res) | At support/gap zone (P7 pass); watch for sector recovery |
-| DDOG | Technology | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Tech W-RSI 56.98), P9 (2.04% to res), P10 (red vol 1.08x) | Needs Tech sector ETF to cross 60 |
-| ASML | Technology | BULLISH | 2/10 | 10 | 2026-09-19 | P2 (Tech W-RSI 56.98), P8, P9 (6.55% — nearest to P9 pass) | Best P9 distance in Tech universe — first to pass if Tech ETF recovers |
+| DDOG | Technology | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Tech W-RSI 56.98), P9 (2.04% to res), P10 (red vol 1.4x) | Needs Tech sector ETF to cross 60 |
 | CAT | Industrials | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Ind W-RSI 43.0), P8, P9 (2.67% to res) | Industrials sector deeply below P2 threshold |
 | EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (RE W-RSI 41.84), P8, P9 (2.51% to res) | Data center play; RE sector weak |
 
@@ -33,6 +32,8 @@
 | Ticker | Sector | Tier | Score | Promoted On | Notes |
 |--------|--------|------|-------|-------------|-------|
 | LLY | Healthcare | BULLISH | 6/10 | 2026-09-19 | ENTER signal — see Monday market-open plan in RESEARCH-LOG.md |
+| CRWD | Technology | EB_MOMENTUM | 6/8 | 2026-09-19 | ENTER signal (momentum, trailing-stop only) — see RESEARCH-LOG.md |
+| ASML | Technology | BULLISH | 6/10 | 2026-09-19 | Scorer says ENTER but **fails P8 hard gate** (green vol 0.99x < 1.0x) — CONDITIONAL, do not execute unless Monday's live volume flips P8 to pass. See Guardrail Alert in RESEARCH-LOG.md. |
 
 ---
 
