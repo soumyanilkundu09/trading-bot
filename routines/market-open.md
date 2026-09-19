@@ -1,14 +1,15 @@
-# Job 2 — MARKET-OPEN (runs ~09:45 ET, Mon–Fri)
+# Routine: MARKET-OPEN (runs ~09:45 ET, Mon–Fri)
 
 **Role:** Score and execute the planned trades from this morning's research log, with full guardrail enforcement. Set protective stops on every new position.
 
-> First complete the Mandatory Startup in `agents/prompts/_shared_startup.md`.
+> First complete the Mandatory Startup in `routines/_shared_startup.md`.
 
 ## Steps
 
 ### 1. Load today's plan
-- Read `state/research/YYYY-MM-DD_premarket.md` (today's date).
-- If it doesn't exist (pre-market didn't run or gate failed) → log "No research/plan for today", notify, commit, STOP.
+- Read `memory/RESEARCH-LOG.md`.
+- **Validate freshness:** check the "Last Run: YYYY-MM-DD" header. If date ≠ today → log "Research log is stale (dated X, expected Y)", send Telegram alert, STOP. Do not trade on yesterday's data.
+- If gate was FAILED in the log → log "No research/plan for today — gate failed at pre-market", notify, STOP.
 - Extract three candidate lists:
   - **Active — EB Pullback**: all rows from the EXTREMELY BULLISH PULLBACK table
   - **Active — EB Momentum**: all rows from the EXTREMELY BULLISH MOMENTUM table
@@ -29,15 +30,15 @@ Apply these checks to every candidate regardless of tier — first failure block
    ```
    - Score must be **≥ 6** to proceed.
    - For EB Momentum: P7 is automatically skipped (max score = 8); threshold remains ≥ 6.
-   - If score ≤ 6 → skip with reason "scorer failed (score=X/Y, failed: [params])".
+   - If score < 6 → skip with reason "scorer failed (score=X/Y, failed: [params])".
 
 3. **Not chasing**: live price must be ≤ 3% above yesterday's close. If chasing → watchlist, do not enter.
 
-4. **Weekly budget**: `weekly_trade_count < 3` (Guardrail 8E) → else block + watchlist for next Monday.
+4. **Weekly budget**: `weekly_trade_count < 3` from `memory/TRADE-LOG.md` Weekly Tracker (Guardrail 8E) → else block + watchlist for next Monday.
 
-5. **Position cap**: current open positions < 5 (Guardrail 8B) → else block.
+5. **Position cap**: current open positions < 5 from `memory/TRADE-LOG.md` Open Positions (Guardrail 8B) → else block.
 
-6. **Not already held**: skip if we already hold this ticker in `state/portfolio.md`.
+6. **Not already held**: skip if ticker already appears in Open Positions in `memory/TRADE-LOG.md`.
 
 Only candidates clearing all 6 checks proceed to Step 4. Use the `trade_plan` from the scorer for the order.
 
@@ -52,25 +53,31 @@ For each survivor, use the scorer's `trade_plan`:
 **EB Momentum:**
 - Submit a **stop-only order** (no fixed T1 bracket): `AlpacaClient().place_order(symbol, shares, stop_loss)`.
 - `trade_plan.trailing_stop_only == True` confirms this path.
-- The trailing stop is managed dynamically in the midday-scan job (3-bar candle low).
+- The trailing stop is managed dynamically in the midday routine (3-bar candle low).
 - No fixed take-profit is set — the position rides until the trailing stop is hit or a hard-exit rule fires.
 
 Confirm the order was accepted; capture order id + status. If REAL mode and unattended → suppress order per 8A handling in shared startup; emit alert instead.
 
 ### 5. Update state
-- Append the new position to `state/portfolio.md`. Include the **Tier** field for each new row:
-  - `EB_PULLBACK`, `EB_MOMENTUM`, or `BULLISH`
-- Increment `weekly_trade_count` in `state/weekly_tracker.md` and add the entry row.
-- Remove the ticker from `state/watchlist.md` if it was there.
+For each trade entered, append to the **Open Positions** section of `memory/TRADE-LOG.md` with full thesis:
+- Ticker, Sector, Tier (EB_PULLBACK / EB_MOMENTUM / BULLISH)
+- Entry Date, Entry $, Shares, Stop $, T1 $, T2 $, Status
+- **Thesis**: why this setup — tier, catalyst, P2/P7/P8/P9/P10 pass/fail summary, R/R ratio, order ID
+
+Increment `weekly_trade_count` and add the entry row in the **Weekly Tracker** section.
+Remove the ticker from the **Watchlist** section if it was there.
+Update the `Last Updated` timestamp at the top of `memory/TRADE-LOG.md`.
+
+**Skip the commit entirely if no trades fired** — no noise in git history.
 
 ### 6. Close out
-- Commit + push.
+- If trades fired: commit + push `memory/TRADE-LOG.md`.
 - **Telegram per trade:** use `telegram_notify.trade_alert(...)`.
 - **Telegram summary:** `🔔 Market-open <date>: Entered X trade(s): [TICKER(TIER), ...]. Blocked: Y. Weekly: Z/3. Open: N/5.`
   If nothing entered: `🔔 Market-open <date>: No trades. <reason: no triggers / budget full / gate / no candidates>.`
 
-## Guardrails specific to this job
-- This is the ONLY job that opens new positions.
+## Guardrails specific to this routine
+- This is the ONLY routine that opens new positions.
 - Every block → structured 8F alert via `telegram_notify.guardrail_block(...)`. No silent skips.
 - Never exceed weekly budget or position cap even if multiple A+ setups appear — take the highest-scored ones up to the limit.
 - Position size comes from the scorer's `trade_plan` (2% risk, 5% cap). Do not override.
