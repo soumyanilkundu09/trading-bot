@@ -65,11 +65,16 @@ def fetch_sp500_tickers() -> list[str]:
     Returns empty list on any failure so the scan can continue with universe.json.
     """
     try:
+        import io
+        import urllib.request
         import pandas as pd
-        tables = pd.read_html(
+        req = urllib.request.Request(
             "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
-            attrs={"id": "constituents"},
+            headers={"User-Agent": "Mozilla/5.0 (compatible; trading-bot-scanner/1.0)"},
         )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            html = resp.read().decode("utf-8")
+        tables = pd.read_html(io.StringIO(html), attrs={"id": "constituents"})
         symbols = tables[0]["Symbol"].tolist()
         # Wikipedia uses dots (BRK.B); yfinance uses dashes (BRK-B)
         return [str(s).replace(".", "-") for s in symbols]

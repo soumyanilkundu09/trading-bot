@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-19 (pre-market run)
+# Trade Log — Last Updated: 2026-09-21 05:41 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -22,24 +22,42 @@
 
 | Ticker | Sector | Tier | Score | Max | Last Scored | Key Blockers | Notes |
 |--------|--------|------|-------|-----|-------------|--------------|-------|
-| SCHW | Financials | BULLISH | 4/10 | 10 | 2026-09-19 | P2 (Fin W-RSI 54.54 < 60), P9 (1.01% to res) | Closest Financials pick; need sector ETF recovery |
-| MA | Financials | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Fin W-RSI 54.54), P8 (green vol 0.95x), P9 (1.98% to res) | At support/gap zone (P7 pass); watch for sector recovery |
-| DDOG | Technology | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Tech W-RSI 56.98), P9 (2.04% to res), P10 (red vol 1.08x) | Needs Tech sector ETF to cross 60 |
-| ASML | Technology | BULLISH | 2/10 | 10 | 2026-09-19 | P2 (Tech W-RSI 56.98), P8, P9 (6.55% — nearest to P9 pass) | Best P9 distance in Tech universe — first to pass if Tech ETF recovers |
-| CAT | Industrials | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (Ind W-RSI 43.0), P8, P9 (2.67% to res) | Industrials sector deeply below P2 threshold |
-| EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-19 | P2 (RE W-RSI 41.84), P8, P9 (2.51% to res) | Data center play; RE sector weak |
+| DDOG | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (2.04% to res), P10 (red vol 1.08x) | Tech sector now strong (XLK W-RSI 63.37); close to promotion |
+| KEYS | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P8 (green vol 0.98x), P9 (1.18% to res) | Near-miss on P9; watch for pullback |
+| ADI | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P8 (green vol 0.98x), P9 (0.22% to res) | Right at resistance — needs breakout or deeper pullback |
+| APH | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P8 (green vol 0.94x), P9 (1.87% to res) | Tech sector tailwind; volume lagging |
+| TXN | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (0.23% to res), P10 (red vol 1.01x) | Right at resistance |
+| BE | Industrials | BULLISH | 5/10 | 10 | 2026-09-21 | P2 (Ind W-RSI 43.0), P7 (3.45% to support), P10 (red vol 1.12x) | Industrials sector weak; strong daily RSI (57.5) offsets |
+| SCHW | Financials | BULLISH | 4/10 | 10 | 2026-09-21 | P2 (Fin W-RSI 54.54), P9 (1.01% to res) | Closest Financials pick; need sector ETF recovery |
+| GL | Financials | BULLISH | 4/10 | 10 | 2026-09-21 | P2 (Fin W-RSI 54.54), P9 (0.72% to res) | Right at resistance |
+| NVDA | Technology | BULLISH | 4/10 | 10 | 2026-09-21 | P7 (2.57% to support), P9 (1.27% to res) | Mega-cap; tight range near resistance |
+| MA | Financials | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (Fin W-RSI 54.54), P8 (vol 0.95x), P9 (1.98% to res) | At support/gap zone (P7 pass); watch for sector recovery |
+| CAT | Industrials | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (Ind W-RSI 43.0), P8 (vol 0.95x), P9 (2.67% to res) | Industrials sector deeply below P2 threshold |
+| EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (RE W-RSI 41.84), P8 (vol 0.86x), P9 (2.51% to res) | Data center play; RE sector weak |
 
-**Promoted to Active Trade List (2026-09-19):**
+**Promoted to Active Trade List (2026-09-21) — entering today (weekly budget 3/3):**
 | Ticker | Sector | Tier | Score | Promoted On | Notes |
 |--------|--------|------|-------|-------------|-------|
-| LLY | Healthcare | BULLISH | 6/10 | 2026-09-19 | ENTER signal — see Monday market-open plan in RESEARCH-LOG.md |
+| LH | Healthcare | EXTREMELY_BULLISH_PULLBACK | 9/10 | 2026-09-21 | ENTER — see today's plan in RESEARCH-LOG.md |
+| FLEX | Technology | BULLISH | 9/10 | 2026-09-21 | ENTER — see today's plan in RESEARCH-LOG.md |
+| JBL | Technology | BULLISH | 9/10 | 2026-09-21 | ENTER — see today's plan in RESEARCH-LOG.md |
+
+**PROMOTE — score ≥6 but blocked by weekly budget (8E), carry to next available window:**
+| Ticker | Sector | Tier | Score | Last Scored | Notes |
+|--------|--------|------|-------|-------------|-------|
+| CRWD | Technology | EXTREMELY_BULLISH_MOMENTUM | 8/8 | 2026-09-21 | Full score, momentum tier — top pick if a budget slot frees up |
+| ASML | Technology | BULLISH | 8/10 | 2026-09-21 | Was 2/10 on 2026-09-19; Tech sector recovery drove the jump |
+| WDC | Technology | BULLISH | 8/10 | 2026-09-21 | New entrant this run |
+| HPQ | Technology | EXTREMELY_BULLISH_MOMENTUM | 7/8 | 2026-09-21 | Momentum tier |
+| TRGP | Energy | EXTREMELY_BULLISH_PULLBACK | 6/10 | 2026-09-21 | Fails P9 only (1.35% to resistance — tight) |
+| LLY | Healthcare | BULLISH | 6/10 | 2026-09-21 | Fails P9 only (1.52% to resistance) |
 
 ---
 
 ## Weekly Tracker
 
-Week of: 2026-09-15 (Monday)
-Entries this week: 0 / 3
+Week of: 2026-09-21 (Monday)
+Entries this week: 0 / 3 (LH, FLEX, JBL planned for today's market-open — see RESEARCH-LOG.md)
 Open positions: 0 / 5
 Sector loss tracker: (all clear)
 
