@@ -1,5 +1,4 @@
-# Research Log — Last Run: 2026-09-21 12:20 ET (pre-market routine, run late — market already open)
-*(Manual run at 12:15 ET Monday. Scanner RSI/support/resistance data = Friday 2026-09-18 close. Live prices from Alpaca at run time. The 09:45 market-open routine did not place any trades today.)*
+# Research Log — Last Run: 2026-09-22 05:45 ET (pre-market)
 
 > This file is **overwritten on every pre-market run**. Git history is the archive.
 > Market-open routine validates the "Last Run" date matches today before proceeding.
@@ -18,30 +17,29 @@
 
 | Indicator | Value | Status |
 |-----------|-------|--------|
-| SPX Monthly RSI | 74.24 | ✓ > 60 |
-| SPX Weekly RSI | 63.95 | ✓ > 60 (up from 60.87 on Fri) |
-| VIX | 14.87 | ✓ < 18 |
-| DXY 20d change | +1.42% | ✓ < 3% |
-| 10Y Yield | 4.967% (+26bp / 20d) | ⚠ Elevated and rising; near 5% |
-| SPX Price | $7,746.96 | Up ~1.3% vs Fri log ($7,650.50) |
+| SPX Monthly RSI | 74.43 | ✓ > 60 |
+| SPX Weekly RSI | 64.46 | ✓ > 60 (healthy, up from 64.46... trending) |
+| VIX | 14.88 | ✓ < 18 (normal band) |
+| DXY 20d change | +1.54% | ✓ < 3% (not spiking) |
+| 10Y Yield | 4.963% (+25.9bp / 20d) | ⚠ Elevated and still rising; sits just under 5% |
+| SPX Price | $7,764.70 | — |
 
-**Verdict: POSITIVE. Proceed with scan.** All hard thresholds pass. Soft warning: 10Y yield has risen 26bp in 20 days and sits just under 5%, and the Fed hiked (see Event Risk). Only one soft bearish signal, so the "any 2 bearish" rule is not triggered.
+**Verdict: POSITIVE. Proceed with scan.** All hard thresholds pass (Monthly/Weekly RSI, VIX, DXY). Soft warning: 10Y yield continues to grind higher near the 5% level — only one soft bearish signal, so the "any 2 bearish" disqualifier is not triggered.
 
 ---
 
 ## Event Risk
-- **Fed:** FOMC raised the funds rate 25bp to 3.75–4.00% on 2026-09-16 ([CNBC](https://www.cnbc.com/2026/09/16/fed-rate-decision-september-2026.html)). Next FOMC is Oct 27–28 — **no Fed event within 3 days**. Note: this is a tightening cycle, a headwind for growth/long-duration names; the Friday log did not mention the hike.
-- **Earnings (Part 7 disqualifier: within 5 trading days):** none for the ENTER names — ASML Oct 14, LLY Oct 29, CRWD Dec 1 (est.).
-- 10Y yield at 4.967%. If it closes above 5% and holds, re-evaluate the gate at the next run.
+- **Fed:** Per prior session's research, FOMC last met 2026-09-16 (25bp hike to 3.75–4.00%). Next scheduled FOMC is Oct 27–28, 2026 — **no Fed event within 3 days**.
+- **Earnings:** No dedicated earnings-calendar tool is wired into this bot (`tools/` has no calendar source), so earnings dates for today's candidates (MRVL, LRCX, MU, TXN, LLY, MS) are **not independently verified** this run. Market-open should sanity-check each ticker isn't inside a 5-trading-day earnings window before executing (Part 7 disqualifier).
+- 10Y yield at 4.963%, still climbing. If it closes above 5% and holds, re-evaluate the gate at the next run.
 
 ---
 
 ## Risk Factors
-- **Scan universe degraded:** Wikipedia S&P 500 fetch failed (HTTP 403), so the scanner fell back to `config/universe.json` only — **137 tickers scanned, not ~503**. Names outside universe.json (rest of the S&P 500) were not scanned today. Consider fixing the constituent source (e.g. a cached CSV or different endpoint).
-- **Stale scan vs live market:** scanner prices are Friday closes (e.g. LLY 1152.46). The market rallied today (SPX ~+1.3%), so live entries are above scan prices. Chase check (max +3%) applied below.
-- **Tech sector recovered:** XLK weekly RSI 63.37 (was 56.98 Friday) → Technology now passes P2. This is why CRWD/ASML/DDOG/TXN scores jumped vs Friday.
-- Macro: Fed hiking + 10Y near 5%.
+- **Scan universe degraded:** Wikipedia S&P 500 fetch failed (HTTP 403) again — scanner fell back to `config/universe.json` only (**137 tickers scanned, not ~503**). Consider fixing the constituent source.
+- **Sector concentration:** All 3 ENTER picks today (MRVL, LRCX, MU) are Technology/semiconductor names — correlated exposure to one sub-sector. XLK is genuinely the strongest sector (W-RSI 66.5, M-RSI 74.67), which is why it dominates the candidate list, but a single semi-sector drawdown would hit all three together. Flagging for awareness; not blocked by any hard guardrail.
 - No held positions → no -7% stop-outs to flag.
+- No urgent overnight thesis breaks identified.
 
 ---
 
@@ -51,87 +49,168 @@
 
 | Sector ETF | Weekly RSI | Monthly RSI | P2 (>60) |
 |------------|-----------|-------------|----------|
-| Energy (XLE) | 63.91 | 66.01 | ✓ PASS (no universe hits) |
-| Technology (XLK) | 63.37 | 73.41 | ✓ PASS (new vs Fri) |
-| Healthcare (XLV) | 60.77 | 70.92 | ✓ PASS |
-| Financials (XLF) | 54.54 | 67.66 | ✗ |
-| Communication Svcs (XLC) | 47.53 | 58.87 | ✗ |
-| Materials (XLB) | 45.57 | 59.64 | ✗ |
-| Consumer Staples (XLP) | 44.75 | 63.76 | ✗ |
-| Industrials (XLI) | 43.00 | 62.85 | ✗ |
-| Consumer Disc. (XLY) | 42.48 | 49.44 | ✗ |
-| Real Estate (XLRE) | 41.84 | 61.77 | ✗ |
-| Utilities (XLU) | 35.37 | 55.57 | ✗ |
+| Technology (XLK) | 66.50 | 74.67 | ✓ PASS |
+| Healthcare (XLV) | 61.35 | 71.45 | ✓ PASS |
+| Energy (XLE) | 58.72 | 63.02 | ✗ |
+| Financials (XLF) | 54.61 | 67.70 | ✗ |
+| Communication Svcs (XLC) | 54.60 | 62.58 | ✗ |
+| Materials (XLB) | 44.57 | 58.98 | ✗ |
+| Consumer Disc. (XLY) | 44.54 | 50.74 | ✗ |
+| Industrials (XLI) | 43.35 | 63.02 | ✗ |
+| Real Estate (XLRE) | 42.30 | 61.98 | ✗ |
+| Consumer Staples (XLP) | 41.63 | 62.28 | ✗ |
+| Utilities (XLU) | 33.90 | 54.42 | ✗ |
 
-### Extremely Bullish Pullback — 0 candidates
+### Extremely Bullish Pullback — 4 candidates
 
-### Extremely Bullish Momentum — 2 scanned
+| Ticker | Sector | M-RSI | W-RSI | D-RSI | Score | Max | Decision | Notes |
+|--------|--------|-------|-------|-------|-------|-----|----------|-------|
+| **MRVL** | Technology | 69.2 | 64.1 | 62.4 [BRS] | **9/10** | 10 | **ENTER** | Only fails P8 (green vol 0.87x); 16.6% room to resistance |
+| **MU** | Technology | 72.4 | 63.8 | 61.3 [BRS] | **6/10** | 10 | **ENTER** | Fails P9 (4.37% to res — mildest miss of the 6-scorers) |
+| META | Comm. Services | 66.2 | 63.4 | 77.7 [BRS] | 2/10 | 10 | SKIP | P2, P7, P9 all fail; daily RSI extended at 77.7 |
+| INTC | Technology | 63.2 | 63.3 | 71.0 [BRS] | 4/10 | 10 | SKIP | P7, P9 fail |
 
-| Ticker | Sector | M-RSI | W-RSI | D-RSI | Score | Max | Scorer | Final call | Notes |
-|--------|--------|-------|-------|-------|-------|-----|--------|-----------|-------|
-| CRWD | Technology | 83.4 | 68.0 | 60.4 [BRS] | 8/8 | 8 | ENTER | **BLOCKED (chase)** | Live $247.28 = +4.07% vs Fri close, exceeds 3% max chase ($244.74). Nearest resistance $250.30 now only ~1.2% away (P9 would fail on live data). Daily bearish divergence flagged. Monthly RSI 83 extended. → Watchlist, re-check on pullback |
-| AAPL | Technology | 73.4 | 64.9 | 63.8 | 3/8 | 8 | SKIP | SKIP | P9 (2.13% to res), P10 (red vol 1.24x) |
+### Extremely Bullish Momentum — 9 candidates
 
-### Bullish — 16 scanned
+| Ticker | Sector | M-RSI | W-RSI | D-RSI | Score | Max | Decision | Notes |
+|--------|--------|-------|-------|-------|-------|-----|----------|-------|
+| MPC | Energy | 88.2 | 74.0 | 62.3 | 5/8 | 8 | SKIP | P2 (Energy < 60), P10 |
+| PSX | Energy | 77.0 | 73.9 | 61.6 | 5/8 | 8 | SKIP | P2, P10 |
+| FTNT | Technology | 87.5 | 72.1 | 62.4 | 3/8 | 8 | SKIP | P8, P9 |
+| CRWD | Technology | 84.3 | 70.2 | 64.6 [BRS] | 4/8 | 8 | SKIP | P9 (near resistance); scored 8/8 yesterday but pulled back |
+| MRK | Healthcare | 77.7 | 66.7 | 59.9 | 3/8 | 8 | SKIP | P8, P9 |
+| ANET | Technology | 73.2 | 65.5 | 60.0 | 2/8 | 8 | SKIP | P8, P9, P10 |
+| TSM | Technology | 71.4 | 65.4 | 61.7 [BRS] | 2/8 | 8 | SKIP | P8, P9, P10 |
+| ABBV | Healthcare | 75.2 | 62.9 | 59.6 | 3/8 | 8 | SKIP | P9, P10 |
+| PLTR | Technology | 65.5 | 61.0 | 61.2 | 3/8 | 8 | SKIP | P8, P9 |
 
-| Ticker | Sector | M-RSI | W-RSI | D-RSI | Score | Max | Scorer | Key blockers |
-|--------|--------|-------|-------|-------|-------|-----|--------|--------------|
-| **ASML** | Technology | 63.3 | 53.5 | 48.5 [BRS] | **8/10** | 10 | **ENTER** | P8 (green vol 0.99x), P10 (red vol 1.40x — see caveats) |
-| **LLY** | Healthcare | 74.1 | 54.4 | 47.0 [BRS] | **6/10** | 10 | **ENTER (marginal)** | P9 (1.52% to res) |
-| DDOG | Technology | 65.4 | 55.0 | 48.9 [BRS] | 5/10 | 10 | SKIP | P9 (2.04%), P10 (red vol 1.08x) |
-| TXN | Technology | 62.9 | 51.0 | 51.2 [BRS] | 5/10 | 10 | SKIP | P9 (0.23% — at resistance), P10 (1.01x) |
-| SCHW | Financials | 64.0 | 57.6 | 42.3 [BRS] | 4/10 | 10 | SKIP | P2 (Fin 54.54), P9 (1.01%) |
-| NVDA | Technology | 70.6 | 56.9 | 54.0 [BRS] | 4/10 | 10 | SKIP | P7 (2.57% from support), P9 (1.27%) |
-| CSCO | Technology | 78.1 | 54.1 | 46.1 [BRS] | 4/10 | 10 | SKIP | P8, P9 (2.46%), P10 (1.22x) |
-| MA | Financials | 62.6 | 57.2 | 44.1 | 3/10 | 10 | SKIP | P2, P8 (0.95x), P9 (1.98%) |
-| CAT | Industrials | 63.8 | 48.0 | 47.8 [BRS] | 3/10 | 10 | SKIP | P2 (Ind 43.0), P8, P9 (2.67%) |
-| EQIX | Real Estate | 67.1 | 49.8 | 45.1 [BRS] | 3/10 | 10 | SKIP | P2 (RE 41.84), P8, P9 (2.51%) |
-| NBIS | Technology | 68.7 | 55.7 | 52.0 [BRS] | 3/10 | 10 | SKIP | P7, P9 (0.40%), P10 |
-| WMT | Cons. Staples | 63.8 | 41.2 | 45.7 [BRS] | 3/10 | 10 | SKIP | P2, P8, P9 (2.50%) |
-| MPWR | Technology | 61.3 | 43.7 | 46.4 [BRS] | 2/10 | 10 | SKIP | P7, P8, P9, P10 |
-| VZ | Comm. Svcs | 60.1 | 53.0 | 42.1 | 2/10 | 10 | SKIP | P2, P8, P9 (0.11%), P10 |
-| C | Financials | 68.9 | 52.0 | 40.9 [BRS] | 2/10 | 10 | SKIP | P2, P8, P9 (1.28%), P10 (1.43x) |
-| ETN | Industrials | 60.7 | 56.4 | 54.8 [BRS] | 1/10 | 10 | SKIP | P2, P7, P9 (0.42%), P10 |
+### Bullish — 18 candidates
 
-### Filtered by Scanner (near resistance < 5%)
-11 stocks blocked: DE, MU, TSM, TEM, MRVL, SPY, JPM, QQQ, INTC, META, GOOGL.
+| Ticker | Sector | M-RSI | W-RSI | D-RSI | Score | Max | Decision | Notes |
+|--------|--------|-------|-------|-------|-------|-----|----------|-------|
+| SCHW | Financials | 65.8 | 59.8 | 48.6 [BRS] | 4/10 | 10 | SKIP | P2 (Fin 54.61), P9 (1.01%) |
+| KO | Cons. Staples | 76.0 | 59.7 | 44.7 | 3/10 | 10 | SKIP | P2, P9, P10 |
+| ETN | Industrials | 62.0 | 59.1 | 58.3 [BRS] | 1/10 | 10 | SKIP | P2, P7, P9, P10 |
+| DDOG | Technology | 68.7 | 58.5 | 57.0 [BRS] | 4/10 | 10 | SKIP | P8, P9, P10 |
+| NBIS | Technology | 69.6 | 57.3 | 55.4 [BRS] | 3/10 | 10 | SKIP | P7, P9, P10 |
+| CSCO | Technology | 79.6 | 56.1 | 50.9 [BRS] | 5/10 | 10 | SKIP | P9 (2.46%... at 111.46 basis), P10 |
+| COP | Energy | 61.7 | 55.8 | 43.0 | 0/10 | 10 | SKIP | All 5 params fail |
+| **LLY** | Healthcare | 74.6 | 55.5 | 50.9 [BRS] | **6/10** | 10 | **QUALIFIED (budget-blocked)** | Fails P9 — only 0.45% to resistance, essentially at the ceiling |
+| ASML | Technology | 64.3 | 55.3 | 51.9 [BRS] | 3/10 | 10 | SKIP | P7, P9, P10 — score collapsed from yesterday's 8/10 |
+| XOM | Energy | 62.9 | 55.1 | 44.5 | 2/10 | 10 | SKIP | P2, P8, P9, P10 |
+| AMGN | Healthcare | 60.7 | 54.6 | 45.1 [BRS] | 4/10 | 10 | SKIP | P7, P9 |
+| **TXN** | Technology | 63.5 | 52.4 | 54.5 [BRS] | **6/10** | 10 | **QUALIFIED (budget-blocked)** | Fails P9 — 0.94% to resistance |
+| **LRCX** | Technology | 61.1 | 52.3 | 51.3 [BRS] | **7/10** | 10 | **ENTER** | Fails P7 (5.72% from support) and P10 (red vol 1.31x) |
+| BRK.B | Financials | 67.3 | 52.3 | 43.9 | 3/10 | 10 | SKIP | P2, P9, P10 |
+| **MS** | Financials | 73.8 | 52.2 | 42.1 [BRS] | **6/10** | 10 | **QUALIFIED (budget-blocked)** | Fails P2 (sector weak, Fin W-RSI 54.61), P8, P10 — weakest quality of the 6/10s |
+| CAT | Industrials | 64.1 | 49.3 | 50.2 [BRS] | 3/10 | 10 | SKIP | P2 (Ind 43.35), P8, P9 |
+| MPWR | Technology | 63.7 | 48.0 | 53.8 [BRS] | 5/10 | 10 | SKIP | P9 (0.9%... near res), P10 |
+| WMT | Cons. Staples | 64.2 | 42.3 | 48.4 [BRS] | 3/10 | 10 | SKIP | P2, P8, P9 |
+
+### Filtered by Scanner (9 stocks — passed RSI tiers but blocked by entry filters)
+| Ticker | Reason | Re-scored anyway? |
+|--------|--------|-------------------|
+| SPY | near_resistance (0.76%) | ETF — not a scan target |
+| DE | near_resistance (2.97%) | — |
+| QQQ | near_resistance (0.95%) | ETF — not a scan target |
+| TEM | near_resistance (4.77%) | — |
+| NVDA | near_resistance (3.28%) | Yes — 4/10, fails P7 (4.83%), P9 (1.39%) |
+| C | near_resistance (4.53%) | — |
+| GOOGL | near_resistance (1.25%) | — |
+| EQIX | near_resistance (4.65%) | Yes — 3/10, fails P2 (RE 42.30), P8, P9 (0.22% — at resistance) |
+| EOG | gap_down_5d (2.6% on 2026-09-16) | — |
 
 ---
 
 ## Today's Entry Plan
 
-### Trade/Hold Decision: ENTER 2 candidate(s) — ASML (primary), LLY (marginal, lowest priority)
-**Weekly budget:** 0/3 used, 0/5 positions. **No orders placed by this routine.** Plans below use live Alpaca prices at 12:15 ET; re-validate at execution (chase ≤ +3% over Fri close, re-run scorer).
+### Trade/Hold Decision: ENTER 3 candidate(s) — MRVL, LRCX, MU
+**Weekly budget:** 0/3 used → all 3 slots allocated today. **No orders placed by this routine** — market-open executes. Prices below are the scanner's basis (yesterday's close); market-open must re-validate against live quotes (chase ≤ +3%, re-run scorer) before sending orders.
 
-#### 1. ASML — BULLISH tier — Score 8/10 — Bracket order
-- **Thesis:** Daily BRS confirmed (D-RSI 48.5, up from 42.8). Tech sector (XLK W-RSI 63.4) now passes P2. Price ~2.4% above support $1,639.25 with 6.6% room (Fri basis) to resistance $1,789.29. Last candle green, 1.31x avg volume, closes in upper half.
-- **Entry:** ~$1,701.56 live (Fri close $1,679.25; +1.33%; max chase $1,729.63)
-- **Stop:** $1,650.51 (−3.0%) — sits just above support $1,639.25; a close below support invalidates the setup
-- **T1:** $1,803.65 (2R, exit 50% + trail stop to swing low) | T2: $1,854.69
-- **Shares:** 2 | Value ≈ $3,403 (3.4% of equity) | Risk ≈ $102 (0.10% of capital) | R/R at T1: 2.0
+Six tickers scored ≥6 (ENTER-qualified) today: MRVL(9), LRCX(7), MU/TXN/LLY/MS all tied at 6. With only 3 weekly slots available, the 3 highest-quality setups were selected — MRVL and LRCX on raw score, and MU over the other three 6/10s because it has by far the mildest parameter miss (P9 at 4.37% vs. TXN 0.94%, LLY 0.45%, and MS which additionally fails the sector-strength gate P2). See "Blocked by Weekly Budget" below for TXN/LLY/MS.
+
+#### 1. MRVL — Extremely Bullish Pullback — Score 9/10 — Bracket order
+- **Thesis:** Cleanest setup of the day. Monthly RSI 69.2, Weekly RSI 64.1 (both well above 60), Daily RSI 62.4 confirmed via Bullish Range Shift. Technology sector strongly passes P2 (XLK W-RSI 66.5). 16.6% of room to nearest resistance — no proximity risk. Only miss is P8 (last 7 green daily candles average 0.87x the 20-day volume — sustained buying not yet confirmed on volume).
+- **Entry:** ~$257.31 (scan basis)
+- **Stop:** $251.04 (−2.44%, low of trigger candle)
+- **T1:** $299.90 (partial exit 50%) | **T2:** $276.12 (trail remaining 50%)
+- **Shares:** 19 | Value ≈ $4,889 (4.89% of equity) | Risk ≈ $119 (0.12% of capital) | R/R at T1: 6.79
 - **Order type:** Bracket (market entry, day; stop + T1 atomic)
-- **Caveats:** (a) P10 failed — last 4 red candles averaged 1.40x the 20-day volume (all 4 above average): that is conviction selling per the strategy's Adverse Low Move rule, and P8 also missed (0.99x). Score qualifies via P2+P7+P9 (8 pts) only. (b) Score is on Friday's close; at the live price, distance to support is ~3.7% and to resistance ~5.2%, so the P7 buffer has shrunk and P9 is barely above the 5% line. (c) T1 ($1,803.65) is ~0.8% above the nearest resistance ($1,789.29). (d) Earnings Oct 14 — outside the 5-day window.
 
-#### 2. LLY — BULLISH tier — Score 6/10 (threshold minimum) — Bracket order — LOW CONVICTION
-- **Thesis:** Daily BRS, healthcare (XLV W-RSI 60.77) just above 60, price sitting on support/CIP/gap (0.45% above $1,147.31), red-candle volume low (0.77x).
-- **Entry:** ~$1,158.77 live (Fri close $1,152.46; +0.55%; max chase $1,187.03)
-- **Stop:** $1,141.57 (−1.48%)
-- **T1:** $1,193.17 (2R) | T2: $1,210.37
-- **Shares:** 4 | Value ≈ $4,635 (4.6%) | Risk ≈ $69 | R/R at T1: 2.0
+#### 2. LRCX — Bullish — Score 7/10 — Bracket order
+- **Thesis:** Monthly 61.1, Weekly 52.3, Daily 51.3 via BRS. Sector strong (P2 pass, same Tech tailwind as MRVL). Only 5.97% to resistance so real room exists (P9 passes).
+- **Caveats:** Misses P7 — price is 5.72% from the nearest support/CIP/gap, not a tight entry-zone touch. Misses P10 — last 4 red candles averaged 1.31x the 20-day volume, i.e. some real selling pressure on the pullback (a mild Adverse-Low-Move violation). This is more of a "strength continuation" entry than a textbook pullback-to-support entry — size and manage accordingly.
+- **Entry:** ~$302.15 (scan basis)
+- **Stop:** $293.09 (−3.00%)
+- **T1:** $320.27 (partial exit 50%) | **T2:** $329.33 (trail remaining 50%)
+- **Shares:** 16 | Value ≈ $4,834 (4.83% of equity) | Risk ≈ $145 (0.14% of capital) | R/R at T1: 2.0
 - **Order type:** Bracket
-- **Caveats:** Fails P9 (the highest-weight parameter, 4 pts). Nearest resistance is $1,170.02, only ~1.0% above the live price, and T1 sits ~2% *beyond* it — reward to actual resistance is only ~0.65R. XLV just crossed 60 and could slip back under (P2 flip → score 4/10). Recommend market-open only take this if price pulls back toward support (~$1,147–1,152) or clears $1,170 on volume; otherwise skip.
 
-**Priority if only one is taken:** ASML > LLY. Neither is required — HOLD (no trade) is a valid outcome.
+#### 3. MU — Extremely Bullish Pullback — Score 6/10 — Bracket order
+- **Thesis:** Monthly 72.4, Weekly 63.8, Daily 61.3 via BRS — same strong Tech/semis tailwind as MRVL. Price sits in a gap-support zone (P7 pass), last 7 green days average 1.17x volume (P8 pass), red-candle volume on the pullback is low at 0.89x (P10 pass, Adverse Low Move confirmed).
+- **Caveats:** Misses P9 — only 4.37% to resistance, the shallowest cushion of the three entries today.
+- **Entry:** ~$1,043.51 (scan basis)
+- **Stop:** $1,012.20 (−3.00%)
+- **T1:** $1,106.13 (partial exit 50%) | **T2:** $1,137.44 (trail remaining 50%)
+- **Shares:** 4 | Value ≈ $4,174 (4.17% of equity) | Risk ≈ $125 (0.13% of capital) | R/R at T1: 2.0
+- **Order type:** Bracket
 
-### Blocked / Watch-only (no entry)
-- **CRWD (8/8 scorer ENTER → BLOCKED):** 8F alert — chase rule (live +4.07% > 3% cap), price ~1.2% from resistance $250.30 at live, bearish daily divergence, monthly RSI 83.4 extended. Next action: watchlist; reconsider only after a pullback (support gap zone $213–216) with fresh scorer run.
-- **Watchlist only:** DDOG (5), TXN (5), SCHW (4), NVDA (4), CSCO (4), MA (3), CAT (3), EQIX (3)
+**Combined:** 3 positions, $13,897 deployed (13.9% of equity), $389 total risk (0.39% of capital) — well within all Guardrail 8B caps. All three are Technology/semiconductor names (see Risk Factors — sector concentration).
+
+---
+
+### Blocked by Weekly Budget (Guardrail 8E) — score ≥ 6 but no slots remaining
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║  TRADE BLOCKED — GUARDRAIL VIOLATION                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Stock       : TXN — NASDAQ                                ║
+║  Score       : 6/10 (setup qualified on score)              ║
+║  Blocked by  : 8E — Weekly Trade Budget (3/3 allocated)     ║
+║  Reason      : Ranked below MRVL/LRCX/MU; fails P9 at 0.94% ║
+║                to resistance (tighter than MU's 4.37%)      ║
+║  Next action : Watchlisted; re-evaluate next Monday, or     ║
+║                sooner if a 09-22 entry exits early           ║
+╚═══════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════╗
+║  TRADE BLOCKED — GUARDRAIL VIOLATION                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Stock       : LLY — NYSE                                   ║
+║  Score       : 6/10 (setup qualified on score)               ║
+║  Blocked by  : 8E — Weekly Trade Budget (3/3 allocated)      ║
+║  Reason      : Fails P9 at 0.45% to resistance — essentially ║
+║                at the ceiling; weakest R:R of the six        ║
+║  Next action : Watchlisted; re-evaluate next Monday, or      ║
+║                sooner if a 09-22 entry exits early            ║
+╚═══════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════╗
+║  TRADE BLOCKED — GUARDRAIL VIOLATION                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Stock       : MS — NYSE                                     ║
+║  Score       : 6/10 (setup qualified on score)                ║
+║  Blocked by  : 8E — Weekly Trade Budget (3/3 allocated)       ║
+║  Reason      : Also fails P2 — Financials sector W-RSI 54.61  ║
+║                is below the 60 strength gate ("strong stock   ║
+║                in a weak sector"); plus P8, P10 fail           ║
+║  Next action : Watchlisted; lowest priority of the six —      ║
+║                re-evaluate only if Financials (XLF) reclaims   ║
+║                W-RSI > 60                                      ║
+╚═══════════════════════════════════════════════════════════╝
+```
+
+### Watchlist-only (score < 6, no action)
+CSCO (5), MPWR (5), CRWD (4/8), NVDA (4), SCHW (4), DDOG (4), AMGN (4), KO (3), NBIS (3), ASML (3), BRK.B (3), CAT (3), WMT (3), EQIX (3) — see `memory/TRADE-LOG.md` Watchlist for full blocker detail.
+Not carried to watchlist (score 0–2, multiple hard failures): COP (0), ETN (1), XOM (2), META (2), ANET (2), TSM (2).
+Dropped from watchlist entirely (tier decayed to NONE — no longer qualifies for any tier): MA.
 
 ---
 
 ## Summary
-- Gate: POSITIVE (SPX M/W 74.2/64.0, VIX 14.9; 10Y 4.97% and Fed hike = caution)
+- Gate: POSITIVE (SPX M/W 74.4/64.5, VIX 14.9; 10Y 4.96% and still rising = soft caution)
 - Tickers scanned: 137 (degraded — S&P 500 constituent fetch failed) | Errors: 0
-- EB Pullback: 0 | EB Momentum: 2 scanned, 1 scorer-ENTER (CRWD, blocked on chase) | Bullish: 16 scanned, 2 ENTER (ASML 8/10, LLY 6/10)
-- Filtered by scanner: 11 (near resistance)
-- Plan: ASML primary (2 sh), LLY marginal (4 sh, conditional). Budget 0/3.
+- EB Pullback: 4 scanned, 2 ENTER-qualified (MRVL 9/10, MU 6/10) | EB Momentum: 9 scanned, 0 ENTER-qualified | Bullish: 18 scanned, 4 ENTER-qualified (LRCX 7/10, TXN/LLY/MS 6/10)
+- Filtered by scanner: 9 (8 near-resistance, 1 gap-down)
+- Plan: ENTER 3 — MRVL, LRCX, MU (all Technology). TXN, LLY, MS qualified but budget-blocked (8E). Weekly budget after execution: 3/3.
