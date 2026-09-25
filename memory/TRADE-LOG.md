@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-21 12:20 ET (pre-market run)
+# Trade Log — Last Updated: 2026-09-25 05:48 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -22,21 +22,27 @@
 
 | Ticker | Sector | Tier | Score | Max | Last Scored | Key Blockers | Notes |
 |--------|--------|------|-------|-----|-------------|--------------|-------|
-| CRWD | Technology | EB_MOMENTUM | 8/8 | 8 | 2026-09-21 | Chase (live +4.07% > 3% cap), P9 at live (~1.2% to res $250.30), daily bearish divergence | Scorer ENTER but BLOCKED; re-check after pullback (gap support $213–216) |
-| DDOG | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (2.04% to res), P10 (red vol 1.08x) | Tech P2 now passes (XLK W-RSI 63.37); 1 pt short of ENTER |
-| TXN | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (0.23% — at resistance), P10 (1.01x) | Wait for resistance break / pullback |
-| SCHW | Financials | BULLISH | 4/10 | 10 | 2026-09-21 | P2 (Fin W-RSI 54.54 < 60), P9 (1.01% to res) | Needs Financials sector recovery |
-| NVDA | Technology | BULLISH | 4/10 | 10 | 2026-09-21 | P7 (2.57% from support), P9 (1.27% to res) | Extended; wait for pullback to support |
-| CSCO | Technology | BULLISH | 4/10 | 10 | 2026-09-21 | P8 (0.98x), P9 (2.46%), P10 (1.22x) | At support (0.25%) but volume weak |
-| MA | Financials | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (Fin W-RSI 54.54), P8 (green vol 0.95x), P9 (1.98% to res) | At support/gap zone (P7 pass); watch for sector recovery |
-| CAT | Industrials | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (Ind W-RSI 43.0), P8, P9 (2.67% to res) | Industrials sector deeply below P2 threshold |
-| EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (RE W-RSI 41.84), P8, P9 (2.51% to res) | Data center play; RE sector weak |
+| TSM | Technology | EB_MOMENTUM | 7/8 | 8 | 2026-09-25 | P8 green-vol hard gate (0.91x < 1.0) | Score clears ENTER threshold but blocked by P8 gate; re-check next session |
+| MRVL | Technology | EB_MOMENTUM | 7/8 | 8 | 2026-09-25 | P8 green-vol hard gate (0.85x) | Score clears ENTER threshold but blocked by P8 gate; re-check next session |
+| VEEV | Technology | EB_MOMENTUM | 7/8 | 8 | 2026-09-25 | P8 green-vol hard gate (0.85x) | Score clears ENTER threshold but blocked by P8 gate; re-check next session |
+| COP | Energy | BULLISH | 6/10 | 10 | 2026-09-25 | P2 (Energy W-RSI 59.16), P8 hard gate (0.98x), P10 (1.06x) | Score clears ENTER threshold but blocked by P8 gate |
+| GE | Industrials | BULLISH | 6/10 | 10 | 2026-09-25 | P2 (Ind W-RSI 41.98), P8 hard gate (0.95x), P10 (1.1x) | Score clears ENTER threshold but blocked by P8 gate |
+| LLY | Healthcare | BULLISH | 5/10 | 10 | 2026-09-25 | P8 (0.93x), P9 (0.35% — at resistance) | Was promoted 09/19; decayed back to watchlist, now at resistance |
+| LRCX | Technology | BULLISH | 5/10 | 10 | 2026-09-25 | P9 (4.3% to res), P10 (1.01x) | 1 pt short of ENTER |
+| ASML | Technology | BULLISH | 4/10 | 10 | 2026-09-25 | P8 (0.98x), P9 (3.81%), P10 (1.35x) | Was promoted 09/21 at 8/10; decayed to 4/10 this run |
+| CAT | Industrials | BULLISH | 4/10 | 10 | 2026-09-25 | P2 (Ind W-RSI 41.98), P9 (2.45% to res) | Industrials sector still below P2 threshold |
+| MA | Financials | BULLISH | 3/10 | 10 | 2026-09-25 | P2 (Fin W-RSI 47.73), P8 (1.06x), P10 (1.24x) | Financials sector weaker than 09/21 |
+| MPWR | Technology | BULLISH | 3/10 | 10 | 2026-09-25 | P7 (2.58% from support), P9 (4.84%), P10 (1.08x) | Not at support this run |
+| CSCO | Technology | BULLISH | 3/10 | 10 | 2026-09-25 | P7 (14.91% from support), P9 (4.23%), P10 (1.58x) | Ran well past support zone |
+| EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-25 | P2 (RE W-RSI 38.11), P8 (0.95x), P9 (1.24%) | RE sector still weak |
 
-**Promoted to Active Trade List (2026-09-21):**
+**Dropped this run (tier decayed to NONE):** CRWD, SCHW, NVDA (no longer in any qualifying tier), DDOG (filtered — 0.33% to resistance).
+
+**Promoted to Active Trade List (2026-09-25):**
 | Ticker | Sector | Tier | Score | Promoted On | Notes |
 |--------|--------|------|-------|-------------|-------|
-| ASML | Technology | BULLISH | 8/10 | 2026-09-21 | PROMOTE — primary idea; P8/P10 failed (red vol 1.40x). See RESEARCH-LOG.md |
-| LLY | Healthcare | BULLISH | 6/10 | 2026-09-19 | Marginal (P9 fail, ~1% to res); enter only on pullback / breakout — see RESEARCH-LOG.md |
+| AMGN | Healthcare | BULLISH | 10/10 | 2026-09-25 | PROMOTE — full 5/5 params passed. See RESEARCH-LOG.md |
+| TXN | Technology | BULLISH | 6/10 | 2026-09-25 | PROMOTE — was on watchlist since 09/21; P9 fail (1.0% to res) but other 4 params clean. See RESEARCH-LOG.md |
 
 ---
 
