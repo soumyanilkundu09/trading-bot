@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-21 12:20 ET (pre-market run)
+# Trade Log — Last Updated: 2026-09-29 08:30 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -42,7 +42,7 @@
 
 ## Weekly Tracker
 
-Week of: 2026-09-21 (Monday)
+Week of: 2026-09-28 (Monday)
 Entries this week: 0 / 3
 Open positions: 0 / 5
 Sector loss tracker: (all clear)
