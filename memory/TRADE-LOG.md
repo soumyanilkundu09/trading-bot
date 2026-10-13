@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-21 12:20 ET (pre-market run)
+# Trade Log — Last Updated: 2026-10-13 08:30 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -17,11 +17,24 @@
 
 ## Watchlist
 
-> Stocks in a valid RSI tier but score < 6. Re-scored each pre-market and daily-summary run.
-> Promote when tier ≠ NONE AND scorer returns ENTER (score ≥ 6).
+> Stocks in a valid RSI tier but score < 6 (or blocked). Re-scored each pre-market and daily-summary run.
+> Promote when tier ≠ NONE AND scorer returns ENTER (score ≥ 6) AND no Part 7 disqualifier.
 
 | Ticker | Sector | Tier | Score | Max | Last Scored | Key Blockers | Notes |
 |--------|--------|------|-------|-----|-------------|--------------|-------|
+| LRCX | Technology | BULLISH | 6/10 | 10 | 2026-10-13 | Earnings 2026-10-21 (Part 7) | Scorer ENTER (entry 309.46 / stop 305.67 / T1 320.19); re-check after earnings |
+| GE | Industrials | BULLISH | 6/10 | 10 | 2026-10-13 | P8 hard gate, P2 (Ind W-RSI 42.4), earnings 10/20 | Not tradeable now |
+| MRK | Healthcare | EB_PULLBACK | 5/10 | 10 | 2026-10-13 | P9 (3.31% to res), P10 (1.06x) | 1 pt short |
+| AMAT | Technology | BULLISH | 4/10 | 10 | 2026-10-13 | P7 (8.9% from support), P9 | |
+| ASML | Technology | BULLISH | 4/10 | 10 | 2026-10-13 | P8, P9, P10 | |
+| CEG | Utilities | BULLISH | 4/10 | 10 | 2026-10-13 | P2 (Util W-RSI 42.5), P9 | |
+| JNJ | Healthcare | BULLISH | 4/10 | 10 | 2026-10-13 | P8, P9, P10 | |
+| CVX | Energy | EB_MOMENTUM | 3/8 | 8 | 2026-10-13 | P8, P9 (1.26%) | |
+| C | Financials | BULLISH | 3/10 | 10 | 2026-10-13 | P2, P8, P9 | |
+
+**Promoted to Active Trade List:** none (2026-10-13). Dropped (tier decayed / no longer in scan): CRWD, DDOG, TXN, SCHW, NVDA, CSCO, MA, EQIX, LLY.
+
+--------|--------|------|-------|-----|-------------|--------------|-------|
 | CRWD | Technology | EB_MOMENTUM | 8/8 | 8 | 2026-09-21 | Chase (live +4.07% > 3% cap), P9 at live (~1.2% to res $250.30), daily bearish divergence | Scorer ENTER but BLOCKED; re-check after pullback (gap support $213–216) |
 | DDOG | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (2.04% to res), P10 (red vol 1.08x) | Tech P2 now passes (XLK W-RSI 63.37); 1 pt short of ENTER |
 | TXN | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (0.23% — at resistance), P10 (1.01x) | Wait for resistance break / pullback |
@@ -42,7 +55,7 @@
 
 ## Weekly Tracker
 
-Week of: 2026-09-21 (Monday)
+Week of: 2026-10-12 (Monday)
 Entries this week: 0 / 3
 Open positions: 0 / 5
 Sector loss tracker: (all clear)
