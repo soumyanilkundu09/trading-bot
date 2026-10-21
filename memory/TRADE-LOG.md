@@ -21,7 +21,19 @@
 > Promote when tier ≠ NONE AND scorer returns ENTER (score ≥ 6).
 
 | Ticker | Sector | Tier | Score | Max | Last Scored | Key Blockers | Notes |
-|
+|--------|--------|------|-------|-----|-------------|--------------|-------|
+| JNJ | Healthcare | BULLISH | 4/10 | 10 | 2026-10-21 | P8 (0.87x), P9 (1.89%), P10 (1.49x) | BRS; red-candle volume heavy |
+| NEM | Materials | BULLISH | 4/10 | 10 | 2026-10-21 | P2 (Mat W-RSI 52.2), P9 (1.91%) | BRS; near resistance |
+| TSM | Technology | BULLISH | 3/10 | 10 | 2026-10-21 | P2 (54.3), P9 (0.02% — at res), P10 (1.25x) | Wait for breakout/pullback |
+| FCX | Materials | BULLISH | 3/10 | 10 | 2026-10-21 | P2, P8 (0.95x), P9 (3.38%) | No BRS |
+| NVDA | Technology | BULLISH | 3/10 | 10 | 2026-10-21 | P2 (54.3), P8 (0.99x), P9 (3.9%) |  |
+| CSCO | Technology | BULLISH | 3/10 | 10 | 2026-10-21 | P2, P8 (0.78x), P9 (4.51%) | Weak green volume |
+| GOOGL | Communication_Services | BULLISH | 3/10 | 10 | 2026-10-21 | P2 (46.6), P8 (0.84x), P9 (1.33%) | At gap support |
+| CEG | Utilities | BULLISH | 3/10 | 10 | 2026-10-21 | P2 (43.9), P9 (2.05%), P10 (1.06x) |  |
+| DDOG | Technology | BULLISH | 2/10 | 10 | 2026-10-21 | P2, P7 (2.7%), P9 (0.63%) | Fell from 5/10 |
+| DE | Industrials | BULLISH | 2/10 | 10 | 2026-10-21 | P2 (39.3), P8, P9 (0.8%), P10 |  |
+
+**Promoted to Active Trade List:** none (2026-10-21). Prior promotions (ASML, LLY) decayed out of scan tiers — dropped. Not watchlisted: CRWD (0/10), EQIX (1/10), QQQ (2/10, ETF), FTNT (1/10), TMO (4/8). SCHW, MA, CAT, TXN no longer in a scan tier — removed.
 
 ---
 
