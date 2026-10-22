@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-21 12:20 ET (pre-market run)
+# Trade Log — Last Updated: 2026-10-22 08:45 ET (pre-market run)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
@@ -22,6 +22,24 @@
 
 | Ticker | Sector | Tier | Score | Max | Last Scored | Key Blockers | Notes |
 |--------|--------|------|-------|-----|-------------|--------------|-------|
+| CRWD | Technology | BULLISH | 6/10 | 10 | 2026-10-22 | P2 (Tech W-RSI 56.32), P8 (0.90x), P10 (1.08x) | PROMOTE — marginal ENTER; see RESEARCH-LOG.md |
+| JNJ | Healthcare | BULLISH | 4/10 | 10 | 2026-10-22 | P8, P9 (2.6%), P10 | New |
+| PANW | Technology | BULLISH | 4/10 | 10 | 2026-10-22 | P2, P7 (5.46%), P8, P10 | New |
+| DDOG | Technology | BULLISH | 4/10 | 10 | 2026-10-22 | P2, P9 (2.03%) | |
+| TSM | Technology | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P9 (0.91%), P10 | New |
+| NVDA | Technology | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P8, P9 | |
+| MS | Financials | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P9, P10 | New |
+| ANET | Technology | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P9, P10 | New; D-RSI 39.58 |
+| CEG | Utilities | BULLISH | 3/10 | 10 | 2026-10-22 | P2 (44.48), P9, P10 | New |
+| FCX | Materials | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P8, P9 | New |
+| EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P8, P9 | |
+| ETN | Industrials | BULLISH | 3/10 | 10 | 2026-10-22 | P2, P9, P10 | New |
+| TMO | Healthcare | EB_MOMENTUM | 4/8 | 8 | 2026-10-22 | P9 (1.05% to res) | New; wait for breakout |
+| ABBV | Healthcare | EB_MOMENTUM | 3/8 | 8 | 2026-10-22 | P9, P10 | New |
+
+**Dropped 2026-10-22 (tier decayed to NONE):** TXN, SCHW, MA, CAT, ASML, LLY (and CSCO at 0/10 — kept off).
+
+--------|--------|------|-------|-----|-------------|--------------|-------|
 | CRWD | Technology | EB_MOMENTUM | 8/8 | 8 | 2026-09-21 | Chase (live +4.07% > 3% cap), P9 at live (~1.2% to res $250.30), daily bearish divergence | Scorer ENTER but BLOCKED; re-check after pullback (gap support $213–216) |
 | DDOG | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (2.04% to res), P10 (red vol 1.08x) | Tech P2 now passes (XLK W-RSI 63.37); 1 pt short of ENTER |
 | TXN | Technology | BULLISH | 5/10 | 10 | 2026-09-21 | P9 (0.23% — at resistance), P10 (1.01x) | Wait for resistance break / pullback |
@@ -32,9 +50,12 @@
 | CAT | Industrials | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (Ind W-RSI 43.0), P8, P9 (2.67% to res) | Industrials sector deeply below P2 threshold |
 | EQIX | Real_Estate | BULLISH | 3/10 | 10 | 2026-09-21 | P2 (RE W-RSI 41.84), P8, P9 (2.51% to res) | Data center play; RE sector weak |
 
-**Promoted to Active Trade List (2026-09-21):**
+**Promoted to Active Trade List (2026-10-22):**
 | Ticker | Sector | Tier | Score | Promoted On | Notes |
 |--------|--------|------|-------|-------------|-------|
+| CRWD | Technology | BULLISH | 6/10 | 2026-10-22 | Marginal; re-check chase/resistance at open |
+
+--------|--------|------|-------|-------------|-------|
 | ASML | Technology | BULLISH | 8/10 | 2026-09-21 | PROMOTE — primary idea; P8/P10 failed (red vol 1.40x). See RESEARCH-LOG.md |
 | LLY | Healthcare | BULLISH | 6/10 | 2026-09-19 | Marginal (P9 fail, ~1% to res); enter only on pullback / breakout — see RESEARCH-LOG.md |
 
@@ -42,7 +63,7 @@
 
 ## Weekly Tracker
 
-Week of: 2026-09-21 (Monday)
+Week of: 2026-10-19 (Monday)
 Entries this week: 0 / 3
 Open positions: 0 / 5
 Sector loss tracker: (all clear)
