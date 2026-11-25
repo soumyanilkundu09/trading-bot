@@ -1,4 +1,4 @@
-# Trade Log — Last Updated: 2026-09-21 12:20 ET (pre-market run)
+# Trade Log — Last Updated: 2026-11-25 04:45 ET (pre-market run — gate FAILED, watchlist not re-scored; Sept entries are stale)
 **Trading mode:** PAPER
 
 > Source of truth for all trade state. Updated by every agent run.
